@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: true
+  become_user: root
+  roles:
+    - {role: common, tags: common}
+    - {role: docker, tags: docker}
+    - {role: nginx-native, tags: nginx-native}
+    - {role: prometheus, tags: prometheus}
+#    - {role: data_scraper, tags: data-scraper}
+#    - {role: elasticsearch, tags: elasticsearch}
+#    - {role: grafana, tags: grafana}
+

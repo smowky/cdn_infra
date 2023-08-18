@@ -1,0 +1,48 @@
+---
+
+- name: Create stack directory
+  file:
+    path: "{{ swarm_prometheus_stack_dir }}"
+    state: directory
+
+- name: Copy prometheus stack prescription
+  template:
+    src: "prometheus_stack.yml.j2"
+    dest: "{{ swarm_prometheus_stack_dir }}/prometheus_stack.yml"
+    lstrip_blocks: yes
+    mode: '600'
+
+- name: Create prometheus config directory
+  file:
+    path: "{{ swarm_prometheus_config_dir }}"
+    state: directory
+
+- name: Copy prometheus config prescription
+  template:
+    src: "prometheus_config.yml.j2"
+    dest: "{{ swarm_prometheus_config_dir }}/prometheus.yml"
+    lstrip_blocks: yes
+    mode: '600'
+
+- name: Ensure there is prometheus
+  docker_stack:
+    state: present
+    name: prometheus
+    compose:
+      - "{{ swarm_prometheus_stack_dir }}/prometheus_stack.yml"
+
+- name: Enable nginx grafana vhost on hypervisor
+  template:
+    src: 'grafana_vhost.conf.j2'
+    dest: "{{ nginx_vhost_directory }}/grafana.conf"
+  notify:
+    - Reload nginx
+
+- name: Install grafana dashboards
+  block:
+    - name: grafana dashoards
+      include_tasks: dashboards-grafana.yml
+  tags:
+    - dashboards-grafana
+
+      # TODO alerting      

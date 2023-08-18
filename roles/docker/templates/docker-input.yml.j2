@@ -1,0 +1,11 @@
+- type: docker
+  containers.ids: '*'
+  json.message_key: log
+  json.keys_under_root: true
+  processors:
+  - add_docker_metadata: ~
+  - drop_fields:
+      fields: [ "docker.container.labels.org_label-schema_license", "docker.container.labels.org_label-schema_name", "docker.container.labels.org_label-schema_schema-version", "docker.container.labels.org_label-schema_url", "docker.container.labels.org_label-schema_usage", "docker.container.labels.org_label-schema_vcs-ref", "docker.container.labels.org_label-schema_vcs-url", "docker.container.labels.org_opencontainers_image_created", "docker.container.labels.org_opencontainers_image_documentation", "docker.container.labels.org_opencontainers_image_licenses", "docker.container.labels.org_opencontainers_image_revision", "docker.container.labels.org_opencontainers_image_source", "docker.container.labels.org_opencontainers_image_title", "docker.container.labels.org_opencontainers_image_url", "docker.event.actor.attributes.org_label-schema_build-date", "docker.event.actor.attributes.org_label-schema_license", "docker.event.actor.attributes.org_label-schema_name", "docker.event.actor.attributes.org_label-schema_schema-version", "docker.event.actor.attributes.org_label-schema_url", "docker.event.actor.attributes.org_label-schema_usage", "docker.event.actor.attributes.org_label-schema_vcs-ref", "docker.event.actor.attributes.org_label-schema_vcs-url", "docker.event.actor.attributes.org_label-schema_vendor", "docker.event.actor.attributes.org_label-schema_version", "docker.event.actor.attributes.org_opencontainers_image_created", "docker.event.actor.attributes.org_opencontainers_image_documentation", "docker.event.actor.attributes.org_opencontainers_image_licenses", "docker.event.actor.attributes.org_opencontainers_image_revision", "docker.event.actor.attributes.org_opencontainers_image_source", "docker.event.actor.attributes.org_opencontainers_image_title", "docker.event.actor.attributes.org_opencontainers_image_url" ]
+{% if filebeat_docker_input_custom_processors is defined %}
+  {{ filebeat_docker_input_custom_processors }}
+{% endif %}

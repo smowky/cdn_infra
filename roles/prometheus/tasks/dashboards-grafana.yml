@@ -1,0 +1,22 @@
+---
+# Create project folders
+- name: Create a folder
+  community.grafana.grafana_folder:
+    url: "{{ grafana_api_url }}"
+    grafana_user: "admin"
+    grafana_password: "{{ gf_security_admin_password }}"
+    title: "General"
+    state: present
+  tags:
+    - alerting
+    - monitoring
+
+- name: Import Grafana dashboards
+  community.grafana.grafana_dashboard:
+    grafana_url: "{{ grafana_api_url }}"
+    grafana_user: "admin"
+    grafana_password: "{{ gf_security_admin_password }}"
+    folder: "General"
+    dashboard_id: "{{ item.id }}"
+    dashboard_revision: "{{ item.revision }}"
+  loop: "{{ grafana_dashboards }}"

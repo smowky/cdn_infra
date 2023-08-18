@@ -1,0 +1,78 @@
+---
+# Ansible role to install docker, docker-compose
+
+- name: Make sure older version are uninstalled
+  apt:
+    name: "{{ uninstalled_packages }}"
+    state: absent
+
+- name: Install https apt
+  apt:
+    name: apt-transport-https
+    state: latest
+
+- name: Install necessary packages
+  apt:
+    name: "{{ installed_packages }}"
+    state: latest
+
+- name: Add Docker’s official GPG key
+  apt_key: 
+    url: "{{ docker_gpg_signing_key }}"
+    state: present
+
+- name: Add docker repo
+  apt_repository:
+    repo: "{{ docker_repo }}"
+    state: present
+
+- name: Install docker packages
+  apt:
+    name: "{{ docker_packages }}"
+    update_cache: yes
+    state: latest
+
+- name: Set vm.max_map_count to 262144 in sysctl
+  sysctl:
+    name: "vm.max_map_count"
+    value: 262144
+
+- name: Setup docker logging
+  template:
+    src: 'daemon.json.j2'
+    dest: '/etc/docker/daemon.json'
+  notify: Restart docker
+
+- name: Add docker cleanup cron
+  ansible.builtin.cron:
+    name: Docker system prune
+    cron_file: docker-system-prune
+    user: root
+    minute: "0"
+    hour: "11"
+    weekday: "1"
+    job: "docker system prune -a -f 1> /dev/null"
+  tags: docker-cron
+
+# simple version one host swarm installation    
+- name: Prepare variables  
+  set_fact:
+    exposed_address: "{{ hostvars[inventory_hostname]['ansible_' + ( swarm_internal_interface | regex_replace('-','_') ) ]['ipv4']['address'] | ipaddr('private') }}" 
+      # backup {{ ansible_facts['eth0']['ipv4_secondaries'][0]['address'] }}
+
+- name: Initialize swarm cluster
+  docker_swarm:
+    state: present
+    advertise_addr: "{{ exposed_address }}"
+
+- name: Get cluster info 
+  docker_swarm_info:
+  failed_when: not docker_swarm_status.can_talk_to_docker
+  register: docker_swarm_status
+
+- name: Join swarm cluster as manager
+  docker_swarm:
+    state: join
+    advertise_addr: "{{ exposed_address }}"
+    join_token: "{{ hostvars[inventory_hostname]['docker_swarm_status']['swarm_facts']['JoinTokens']['Manager'] }}"
+    remote_addrs: "{{ hostvars[inventory_hostname]['exposed_address'] }}"

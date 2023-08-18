@@ -1,0 +1,6 @@
+- type: log
+  paths: ['/tmp/filebeat-input-docker-service-ls*.log']
+  json.add_error_key: true
+  exclude_lines: []
+  tags: []
+  fields: {'docker_logs_index_name': 'docker-service-logs'}

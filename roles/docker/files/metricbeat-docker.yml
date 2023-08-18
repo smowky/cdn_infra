@@ -1,0 +1,27 @@
+# Module: docker
+# Docs: https://www.elastic.co/guide/en/beats/metricbeat/7.6/metricbeat-module-docker.html
+
+- module: docker
+  metricsets:
+    - container
+    - cpu
+    - diskio
+    - event
+    - healthcheck
+    - info
+    - memory
+    - network
+  period: 60s
+  hosts: ["unix:///var/run/docker.sock"]
+  processors:
+  - drop_fields:
+      ignore_missing: true
+      fields: [ "docker.container.labels.org_label-schema_license", "docker.container.labels.org_label-schema_name", "docker.container.labels.org_label-schema_schema-version", "docker.container.labels.org_label-schema_url", "docker.container.labels.org_label-schema_usage", "docker.container.labels.org_label-schema_vcs-ref", "docker.container.labels.org_label-schema_vcs-url", "docker.container.labels.org_opencontainers_image_created", "docker.container.labels.org_opencontainers_image_documentation", "docker.container.labels.org_opencontainers_image_licenses", "docker.container.labels.org_opencontainers_image_revision", "docker.container.labels.org_opencontainers_image_source", "docker.container.labels.org_opencontainers_image_title", "docker.container.labels.org_opencontainers_image_url", "docker.event.actor.attributes.org_label-schema_build-date", "docker.event.actor.attributes.org_label-schema_license", "docker.event.actor.attributes.org_label-schema_name", "docker.event.actor.attributes.org_label-schema_schema-version", "docker.event.actor.attributes.org_label-schema_url", "docker.event.actor.attributes.org_label-schema_usage", "docker.event.actor.attributes.org_label-schema_vcs-ref", "docker.event.actor.attributes.org_label-schema_vcs-url", "docker.event.actor.attributes.org_label-schema_vendor", "docker.event.actor.attributes.org_label-schema_version", "docker.event.actor.attributes.org_opencontainers_image_created", "docker.event.actor.attributes.org_opencontainers_image_documentation", "docker.event.actor.attributes.org_opencontainers_image_licenses", "docker.event.actor.attributes.org_opencontainers_image_revision", "docker.event.actor.attributes.org_opencontainers_image_source", "docker.event.actor.attributes.org_opencontainers_image_title", "docker.event.actor.attributes.org_opencontainers_image_url", "docker.cpu.core.0.pct", "docker.cpu.core.0.ticks", "docker.cpu.core.1.pct", "docker.cpu.core.1.ticks", "docker.cpu.core.2.pct", "docker.cpu.core.2.ticks", "docker.cpu.core.3.pct", "docker.cpu.core.3.ticks", "docker.cpu.core.4.pct", "docker.cpu.core.4.ticks", "docker.cpu.core.5.pct", "docker.cpu.core.5.ticks", "docker.cpu.kernel.ticks", "docker.cpu.kernel.pct", "docker.cpu.system.ticks", "docker.cpu.user.ticks", "docker.network.outbound.bytes", "docker.network.outbound.dropped", "docker.network.outbound.errors", "docker.network.outbound.packets", "docker.network.inbound.bytes", "docker.network.inbound.dropped", "docker.network.inbound.errors", "docker.network.inbound.packets" ,"docker.memory.stats.active_anon","docker.memory.stats.active_file","docker.memory.stats.cache","docker.memory.stats.dirty","docker.memory.stats.hierarchical_memory_limit","docker.memory.stats.hierarchical_memsw_limit","docker.memory.stats.inactive_anon","docker.memory.stats.inactive_file","docker.memory.stats.mapped_file","docker.memory.stats.pgfault","docker.memory.stats.pgmajfault","docker.memory.stats.pgpgin","docker.memory.stats.pgpgout", "docker.memory.stats.rss", "docker.memory.stats.rss_huge", "docker.memory.stats.total_active_anon", "docker.memory.stats.total_active_file", "docker.memory.stats.total_cache", "docker.memory.stats.total_dirty", "docker.memory.stats.total_inactive_anon", "docker.memory.stats.total_inactive_file", "docker.memory.stats.total_mapped_file", "docker.memory.stats.total_pgfault", "docker.memory.stats.total_pgmajfault", "docker.memory.stats.total_pgpgin", "docker.memory.stats.total_pgpgout", "docker.memory.stats.total_rss", "docker.memory.stats.total_rss_huge", "docker.memory.stats.total_unevictable", "docker.memory.stats.total_writeback", "docker.memory.stats.unevictable", "docker.memory.stats.writeback", "docker.diskio.read.queued", "docker.diskio.read.rate", "docker.diskio.read.service_time", "docker.diskio.read.wait_time", "docker.diskio.reads", "docker.diskio.summary.bytes", "docker.diskio.summary.ops", "docker.diskio.summary.queued", "docker.diskio.summary.rate", "docker.diskio.summary.service_time", "docker.diskio.summary.wait_time", "docker.diskio.write.queued", "docker.diskio.write.rate", "docker.diskio.write.service_time", "docker.diskio.write.wait_time", "docker.diskio.writes" ]
+  # If set to true, replace dots in labels with `_`.
+  #labels.dedot: false
+
+  # To connect to Docker over TLS you must specify a client and CA certificate.
+  #ssl:
+    #certificate_authority: "/etc/pki/root/ca.pem"
+    #certificate:           "/etc/pki/client/cert.pem"
+    #key:                   "/etc/pki/client/cert.key"

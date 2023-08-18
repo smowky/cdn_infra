@@ -1,0 +1,38 @@
+---
+
+- name: Render template env file
+  set_fact:
+    rendered_docker_env_file: "{{ lookup('template', 'env.j2') }}"
+  when: docker_image.env_file is defined
+
+- name: Create temporary file
+  tempfile:
+    state: file
+    suffix: temp
+  register: env_file
+  when: docker_image.env_file is defined
+
+- name: Create env file
+  copy:
+    content: "{{ rendered_docker_env_file }}"
+    dest: "{{ env_file.path }}"
+  when: 
+    - not ansible_check_mode
+    - docker_image.env_file is defined
+
+- name: Run container
+  docker_container:
+    name: "{{ docker_image.name }}"
+    image: "{{ docker_image.image }}"
+    volumes: "{{ docker_image.volumes|default('null') }}"
+    restart_policy: "{{ docker_image.restart_policy|default('on-failure')}}"
+    stop_signal: "{{ docker_image.stop_signal|default('SIGINT') }}"
+    stop_timeout: "{{ docker_image.stop_timeout|default(20) }}"
+    published_ports: "{{ docker_image.published_ports|default([]) }}"
+    env_file: "{{ env_file.path|default('') }}"
+
+- name: Remove temporary file
+  file:
+    path: "{{ env_file.path }}"
+    state: absent
+  when: env_file.path is defined

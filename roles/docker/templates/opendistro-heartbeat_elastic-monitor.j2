@@ -1,0 +1,8 @@
+# Port 9200 monitor for host {{ ansible_fqdn }}
+
+- type: http
+  name: '{{ ansible_fqdn }}-elasticsearch'
+  schedule: '@every 10s'
+  timeout: 16s
+  wait: 1s
+  urls: ["localhost:9200"]

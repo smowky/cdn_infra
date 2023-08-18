@@ -1,0 +1,115 @@
+---
+#################################################
+# Psylogical test/development bootstrap
+# Version 0.1
+#################################################
+
+- name: Bootstrap server v1
+  remote_user: root
+  become: yes
+  hosts: all
+
+  tasks:
+    # User
+    - block:
+      - name: Create group ansible
+        group:
+          name: ansible
+          system: yes
+
+      - name: Create user ansible
+        user: 
+          name: ansible
+          system: yes
+          group: ansible
+          shell: "/bin/sh"
+          home: "{{ user.ansible.home }}" 
+          groups: sudo
+
+      - name: Create home folder
+        file: 
+          path:   "{{ user.ansible.home }}"
+          state:  directory
+          owner:  ansible
+          group:  ansible
+          mode:   "0750"
+
+      - name: ssh klic
+        authorized_key:
+          user: ansible
+          key:  "{{ user.ansible.ssh_pub_key }}"
+
+    # sudo
+    - block: 
+      - name: Install sudo
+        apt:
+          name: sudo
+
+      - name: Sudo permissions
+        lineinfile:
+          dest: "/etc/sudoers"  
+          regexp: '^[\s]*ansible\b'
+          line: "ansible  ALL=(ALL) NOPASSWD:ALL"
+
+    - name: Test login and sudo
+      remote_user: ansible
+      become: yes
+      ping:
+
+    # nyni je ansible uzivatel pripraven, root uz neni potreba
+    - name: Dissallow root login
+      remote_user: ansible
+      become: yes
+      lineinfile:
+        dest:   "/etc/ssh/sshd_config"
+        regexp: '^[\s]*PermitRootLogin\b'
+        line:   "PermitRootLogin no"
+      notify: Restart ssh
+
+    # update server
+    - name: Update apt cache
+      apt: update_cache=yes
+
+    - name: Safe aptitude upgrade
+      apt: upgrade=safe
+      async: 600
+      poll: 5
+
+    # add smowky
+    - block: 
+      - name: Add smowky
+        user:
+          name: "smowky"
+          password: "{{ user.smowky.pass }}"
+          shell: "/bin/bash"
+          groups: sudo
+          append: yes
+
+      - name: Create home folder
+        file: 
+          path:   "{{ user.smowky.home }}"
+          state:  directory
+          owner:  smowky
+          group:  smowky
+          mode:   "0750"
+
+      - name: ssh klic
+        authorized_key:
+          user: smowky
+          key:  "{{ user.smowky.ssh_pub_key }}"
+        notify: Restart ssh
+
+      - name: Sudo permissions
+        lineinfile:
+          dest: "/etc/sudoers"  
+          regexp: '^[\s]*smowky\b'
+          line: "smowky  ALL=(ALL) NOPASSWD:ALL"
+
+
+  handlers:
+    - name: Restart ssh
+      service:
+        name: ssh
+        state: restarted
+
+...

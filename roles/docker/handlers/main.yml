@@ -1,0 +1,21 @@
+---
+
+- name: Restart metricbeat
+  systemd:
+    name: metricbeat
+    state: restarted
+
+- name: Restart filebeat
+  systemd:
+    name: filebeat
+    state: restarted
+
+- name: Restart heartbeat
+  systemd:
+    name: heartbeat-elastic
+    state: restarted
+
+- name: Restart docker
+  systemd:
+    name: docker
+    state: restarted

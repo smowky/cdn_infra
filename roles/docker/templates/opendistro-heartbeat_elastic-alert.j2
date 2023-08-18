@@ -1,0 +1,121 @@
+#jinja2: variable_start_string: '[%', variable_end_string: '%]', comment_start_string: '[%%', comment_end_string: '%%]'
+{
+  "inputs": [
+    {
+      "search": {
+        "indices": [
+          "heartbeat-*"
+        ],
+        "query": {
+          "query": {
+            "bool": {
+              "filter": [
+                {
+                  "range": {
+                    "@timestamp": {
+                      "from": "{{period_end}}||-5m",
+                      "include_lower": true,
+                      "format": "epoch_millis",
+                      "to": "{{period_end}}",
+                      "include_upper": true,
+                      "boost": 1
+                    }
+                  }
+                },
+                {
+                  "term": {
+                    "monitor.name": {
+                      "boost": 1,
+                      "value": "[% ansible_fqdn %]-elasticsearch"
+                    }
+                  }
+                },
+                {
+                  "term": {
+                    "monitor.status": {
+                      "boost": 1,
+                      "value": "up"
+                    }
+                  }
+                }
+              ],
+              "adjust_pure_negative": true,
+              "boost": 1
+            }
+          },
+          "aggregations": {},
+          "size": 0
+        }
+      }
+    }
+  ],
+  "name": "[% ansible_fqdn %] - Elasticsearch unavailable",
+  "schedule": {
+    "period": {
+      "interval": 1,
+      "unit": "MINUTES"
+    }
+  },
+  "triggers": [
+    {
+      "condition": {
+        "script": {
+          "lang": "painless",
+          "source": "ctx.results[0].hits.total.value > 0"
+        }
+      },
+      "name": "Elasticsearch recovered",
+      "actions": [
+        {
+          "throttle": {
+            "value": 10,
+            "unit": "MINUTES"
+          },
+          "name": "Slack coex-monitoring",
+          "destination_id": "wEXEx3IB_yfasrYzrYKz",
+          "message_template": {
+            "lang": "mustache",
+            "source": "{\n        \"type\": \"message\",\n        \"subtype\": \"bot_message\",\n        \"text\": \"\",\n        \"attachments\": [\n            {\n                \"text\": \"{{ctx.trigger.name}} and is available again.\n- Server: <https://monitoring.coex.cz/app/uptime#/?search=%22[% ansible_fqdn %]-elasticsearch%22|[% ansible_fqdn %]>\n- Trigger: {{ctx.trigger.name}}\",\n                \"title\": \"Recovered: Elasticsearch on  [% ansible_fqdn %] is back ok.\",\n                \"title_link\": \"https:\\/\\/monitoring.coex.cz\\/app\\/opendistro-alerting#\\/monitors\\/{{ctx.monitor._id}}\",\n                \"color\": \"2eb886\",\n                \"fields\": [\n                    {\n                        \"title\": \"Start\",\n                        \"value\": \"{{ctx.periodStart}}\",\n                        \"short\": true\n                    },\n                    {\n                        \"title\": \"End\",\n                        \"value\": \"{{ctx.periodEnd}}\",\n                        \"short\": true\n                    }\n                ],\n                \"mrkdwn_in\": [\n                    \"text\",\n                    \"fields\"\n                ]\n            }\n        ]\n        }"
+          },
+          "subject_template": {
+            "lang": "mustache",
+            "source": ""
+          },
+          "throttle_enabled": true
+        }
+      ],
+      "severity": "1"
+    },
+    {
+      "condition": {
+        "script": {
+          "lang": "painless",
+          "source": "ctx.results[0].hits.total.value == 0"
+        }
+      },
+      "name": "Elasticsearch is not reporting",
+      "actions": [
+        {
+          "throttle": {
+            "value": 10,
+            "unit": "MINUTES"
+          },
+          "name": "Slack coex-monitoring",
+          "destination_id": "wEXEx3IB_yfasrYzrYKz",
+          "message_template": {
+            "lang": "mustache",
+            "source": "{\n        \"type\": \"message\",\n        \"subtype\": \"bot_message\",\n        \"text\": \"\",\n        \"attachments\": [\n            {\n                \"text\": \"Monitor entered alert status.Unable to connect. \n- Server: <https://monitoring.coex.cz/app/uptime#/?search=%22[% ansible_fqdn %]-elasticsearch%22|[% ansible_fqdn %]>\n- Trigger: {{ctx.trigger.name}}\",\n                \"title\": \"Danger: Elasticsearch on server [% ansible_fqdn %] is not responding.\",\n                \"title_link\": \"https:\\/\\/monitoring.coex.cz\\/app\\/opendistro-alerting#\\/monitors\\/{{ctx.monitor._id}}\",\n                \"color\": \"a30200\",\n                \"fields\": [\n                    {\n                        \"title\": \"Start\",\n                        \"value\": \"{{ctx.periodStart}}\",\n                        \"short\": true\n                    },\n                    {\n                        \"title\": \"End\",\n                        \"value\": \"{{ctx.periodEnd}}\",\n                        \"short\": true\n                    }\n                ],\n                \"mrkdwn_in\": [\n                    \"text\",\n                    \"fields\"\n                ]\n            }\n        ]\n        }"
+          },
+          "subject_template": {
+            "lang": "mustache",
+            "source": ""
+          },
+          "throttle_enabled": true
+        }
+      ],
+      "severity": "5"
+    }
+  ],
+  "enabled": true,
+  "type": "monitor"
+}

@@ -1,0 +1,11 @@
+# HTTP redirect
+server {
+    listen      80;
+    listen      [::]:80;
+    server_name {{ nginx_default_server_name }};
+    include     nginxconfig.io/letsencrypt.conf;
+
+    location / {
+        return 301 https://{{ nginx_default_server_name }}$request_uri;
+    }
+}

@@ -1,0 +1,47 @@
+server {
+    listen                  443 ssl http2;
+    listen                  [::]:443 ssl http2;
+    server_name             {{ nginx_default_server_name }};
+    set                     $base /var/www/{{ nginx_default_server_name }};
+    root                    $base/public;
+
+    # SSL
+    {% if nginx_disable_default_ssl == false %}
+    ssl_certificate         /etc/letsencrypt/live/{{ nginx_default_server_name }}/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/{{ nginx_default_server_name }}/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/{{ nginx_default_server_name }}/chain.pem;
+    {% else %}
+    ssl_certificate /etc/ssl/certs/ssl-cert-snakeoil.pem;
+    ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
+    {% endif %}
+
+    # security
+    include                 nginxconfig.io/ssl_modern.include;
+
+    # logging
+    access_log              {{ nginx_access_logs }} combined buffer=512k flush=1m;
+    error_log               {{ nginx_error_logs }} warn;
+
+
+
+}
+
+# subdomains redirect
+server {
+    listen                  443 ssl http2;
+    listen                  [::]:443 ssl http2;
+    server_name             *.{{ nginx_default_server_name }};
+
+    # SSL
+    {% if nginx_disable_default_ssl == false %}
+    ssl_certificate         /etc/letsencrypt/live/{{ nginx_default_server_name }}/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/{{ nginx_default_server_name }}/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/{{ nginx_default_server_name }}/chain.pem;
+    {% else %}
+    ssl_certificate /etc/ssl/certs/ssl-cert-snakeoil.pem;
+    ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
+    {% endif %}
+
+# ready to enable cert with acme.sh
+    return                  301 https://{{ nginx_default_server_name }}$request_uri;
+}

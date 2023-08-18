@@ -1,0 +1,15 @@
+# Use case example
+
+docker_images:
+  - es:
+    name: "jobboard-elastic-prod"
+    image: "elasticsearch:7.7.0"
+    volumes: "esmaster01vol:/usr/share/elasticsearch/data"
+    restart_policy: always
+    stop_signal: "SIGINT"
+    stop_timeout: "20"
+    published_ports: ["9200:9200", "9300:9300"]
+    env_file:
+      "discovery.type": "single-node"
+      "ES_JAVA_OPTS": "-Xms3500m -Xmx3500m"
+      "cluster.name": "jobboard-elastic-prod"

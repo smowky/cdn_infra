@@ -1,0 +1,36 @@
+---
+# Ansible defaults for role docker
+
+uninstalled_packages:
+  - 'docker'
+  - 'docker-engine'
+  - 'docker.io'
+  - 'containerd'
+  - 'runc'
+
+installed_packages:
+  - 'ca-certificates'
+  - 'curl'
+  - 'gnupg-agent'
+  - 'software-properties-common'
+  - 'python3-setuptools'
+  - 'python3-pip'
+  - 'virtualenv'
+  - 'cron'
+  - 'python3-docker'
+  - 'python3-jsondiff'
+
+docker_gpg_signing_key: 'https://download.docker.com/linux/debian/gpg'
+docker_repo: "deb https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+
+docker_packages:
+  - 'docker-ce'
+  - 'docker-ce-cli'
+  - 'containerd.io'
+
+# docker daemon logs retention
+docker_logs_max_size: '500m'
+docker_logs_max_file: '3'
+
+# swarm
+swarm_internal_interface: "eth1" # by default on non zero interface, in order to not open to be open to world

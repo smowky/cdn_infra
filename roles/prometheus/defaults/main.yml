@@ -1,0 +1,20 @@
+---
+# defaults file for docker_swarm_prometheus
+# prometheus
+swarm_prometheus: false
+swarm_prometheus_stack_dir: '/root/prometheus'
+swarm_prometheus_config_dir: '{{ swarm_prometheus_stack_dir }}/prometheus'
+
+# grafana
+grafana_dashboards:
+  - id: 16378 # Node Exporter / Nodes
+    revision: 1
+  - id: 16377 # Prometheus / Overview
+    revision: 1
+  - id: 358   # Prometheus Stats
+    revision: 1
+
+grafana_logging: true
+grafana_server_name: 'grafana-cdn.psylogical.org'
+grafana_api_url: "{{ grafana_server_name }}"
+grafana_ssl: false
