@@ -1,0 +1,40 @@
+---
+- name: Create stack directory
+  file:
+    path: "{{ swarm_elasticsearch_stack_dir }}"
+    state: directory
+
+- name: Copy elasticsearch stack prescription
+  template:
+    src: "elasticsearch_stack.yml.j2"
+    dest: "{{ swarm_elasticsearch_stack_dir }}/elasticsearch_stack.yml"
+    lstrip_blocks: yes
+    mode: '600'
+
+- name: Create elasticsearch config directory
+  file:
+    path: "{{ swarm_elasticsearch_config_dir }}"
+    state: directory
+
+- name: Copy elasticsearch config prescription
+  template:
+    src: "elasticsearch_config.yml.j2"
+    dest: "{{ swarm_elasticsearch_config_dir }}/elasticsearch.yml"
+    lstrip_blocks: yes
+    mode: '600'
+
+- name: Create docker secret with admin password
+  docker_secret:
+    name: "{{ item.swarm_secret_name }}"
+    data: "{{ item.swarm_secret_value }}"
+  loop:
+    - { swarm_secret_name: elasticsearch_password, swarm_secret_value: "{{ swarm_elasticsearch_password }}" } 
+    - { swarm_secret_name: kibana_password, swarm_secret_value: "{{ swarm_kibana_password }}" } 
+
+- name: Ensure there is elasticsearch
+  docker_stack:
+    state: present
+    name: elasticsearch
+    compose:
+      - "{{ swarm_elasticsearch_stack_dir }}/elasticsearch_stack.yml"
+  tags: stack-reload

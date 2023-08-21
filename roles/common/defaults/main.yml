@@ -2,6 +2,8 @@
 
 common_role_install_packages:
   - ufw
+  - htop
+  - curl
 
 ufw_rules_custom:
   - { 'rule': 'allow', 'to_port': '22', 'protocol': 'tcp', 'from_ip': 'any' }

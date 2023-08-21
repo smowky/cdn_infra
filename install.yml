@@ -7,7 +7,6 @@
     - {role: docker, tags: docker}
     - {role: nginx-native, tags: nginx-native}
     - {role: prometheus, tags: prometheus}
+    - {role: elasticsearch-swarm, tags: elasticsearch}
+    - {role: nginx-swarm, tags: nginx-swarm}
 #    - {role: data_scraper, tags: data-scraper}
-#    - {role: elasticsearch, tags: elasticsearch}
-#    - {role: grafana, tags: grafana}
-

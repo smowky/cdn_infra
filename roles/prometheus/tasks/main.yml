@@ -30,6 +30,7 @@
     name: prometheus
     compose:
       - "{{ swarm_prometheus_stack_dir }}/prometheus_stack.yml"
+  tags: stack-reload
 
 - name: Enable nginx grafana vhost on hypervisor
   template:

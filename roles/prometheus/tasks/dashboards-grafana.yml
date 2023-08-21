@@ -2,21 +2,32 @@
 # Create project folders
 - name: Create a folder
   community.grafana.grafana_folder:
-    url: "{{ grafana_api_url }}"
+    url: "http://{{ grafana_api_url }}"
     grafana_user: "admin"
     grafana_password: "{{ gf_security_admin_password }}"
-    title: "General"
+    title: "cdn-test-folder"
     state: present
-  tags:
-    - alerting
-    - monitoring
 
 - name: Import Grafana dashboards
   community.grafana.grafana_dashboard:
-    grafana_url: "{{ grafana_api_url }}"
+    grafana_url: "http://{{ grafana_api_url }}"
     grafana_user: "admin"
     grafana_password: "{{ gf_security_admin_password }}"
-    folder: "General"
+    folder: "cdn-test-folder"
+    state: present
+    overwrite: yes
     dashboard_id: "{{ item.id }}"
     dashboard_revision: "{{ item.revision }}"
   loop: "{{ grafana_dashboards }}"
+
+- name: Create prometheus datasource
+  community.grafana.grafana_datasource:
+    grafana_url: "http://{{ grafana_api_url }}"
+    grafana_user: "admin"
+    grafana_password: "{{ gf_security_admin_password }}"
+    org_id: "1"
+    name: 'cdn-promethues-datasource'
+    ds_type: prometheus
+    ds_url: 'http://prometheus_prometheus:9090'
+    access: proxy
+    tls_skip_verify: true

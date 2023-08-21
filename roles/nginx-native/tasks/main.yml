@@ -57,6 +57,22 @@
   when: nginx_disable_default_ssl
   notify: Reload nginx
 
+- name: Check if cert files exist
+  stat:
+    path: "{{ certbot_conf_dir }}/live/{{ server_name }}"
+  register: certbot_certs
+  when: nginx_disable_default_ssl
+
+- name: Issue certificate with certbot command
+  docker_container:
+    name: "{{ certbot_hostname }}"
+    image: "{{ certbot_image }}"
+    volumes:
+    - "{{ certbot_conf_dir }}/:/etc/letsencrypt/"
+    - "{{ certbot_conf_dir }}/www/:/var/www/certbot/"
+    command: certonly --webroot --email {{ certbot_email }} --agree-tos --webroot-path=/var/www/certbot/ -d {{ nginx_server_name }}
+  when: nginx_disable_default_ssl
+
 # firewall
 - name: Set up UFW - allow TCP 80
   ufw: rule=allow port=80 proto=tcp
