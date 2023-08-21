@@ -13,17 +13,6 @@ services:
       - KIBANA_PASSWORD="{{ swarm_kibana_password }}" # same here
     command: >
       bash -c '
-        export ELASTIC_PASSWORD="$(cat /run/secrets/elasticsearch_password)";
-        cat /run/secrets/elasticsearch_password;
-        echo $ELASTIC_PASSWORD;
-        export KIBANA_PASSWORD="$(cat $KIBANA_PASSWORD_FILE)";
-        if [ x${ELASTIC_PASSWORD} == x ]; then
-          echo "Set the ELASTIC_PASSWORD environment variable in the .env file";
-          exit 1;
-        elif [ x${KIBANA_PASSWORD} == x ]; then
-          echo "Set the KIBANA_PASSWORD environment variable in the .env file";
-          exit 1;
-        fi;
         if [ ! -f config/certs/ca.zip ]; then
           echo "Creating CA";
           bin/elasticsearch-certutil ca --silent --pem -out config/certs/ca.zip;
@@ -68,7 +57,7 @@ services:
         echo "Waiting for Elasticsearch availability";
         until curl -s --cacert config/certs/ca/ca.crt https://es01:9200 | grep -q "missing authentication credentials"; do sleep 30; done;
         echo "Setting kibana_system password";
-        until curl -s -X POST --cacert config/certs/ca/ca.crt -u "elastic:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" https://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
+        until curl -s -X POST --cacert config/certs/ca/ca.crt -u "elastic:{{ swarm_elasticsearch_password }" -H "Content-Type: application/json" https://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"{{ swarm_kibana_password }}\"}" | grep -q "^{}"; do sleep 10; done;
         echo "All done!";
       '
     healthcheck:
@@ -100,7 +89,9 @@ services:
       - cluster.name={{ swarm_elasticsearch_cluster_name }}
       - cluster.initial_master_nodes=es01,es02,es03,es04
       - discovery.seed_hosts=es02,es03,es04
-      - ELASTIC_PASSWORD_FILE=/run/secrets/elasticsearch_password
+      #- ELASTIC_PASSWORD_FILE=/run/secrets/elasticsearch_password
+      - ELASTIC_PASSWORD={{ swarm_elasticsearch_password }}
+      - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
       - bootstrap.memory_lock=true
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -124,11 +115,19 @@ services:
           "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
         ]
       interval: 10s
-      timeout: 10s
+      timeout: 40s
       retries: 120
     secrets:
-      - elasticsearch_password
-      - kibana_password
+      - source: elasticsearch_password
+        target: elasticsearch_password
+        mode: 0600
+        uid: '0'
+        gid: '1000'
+      - source: kibana_password
+        target: kibana_password
+        mode: 0600
+        uid: '0'
+        gid: '1000'
 
   es02:
     depends_on:
@@ -144,10 +143,12 @@ services:
       - certs:/usr/share/elasticsearch/config/certs
       - esdata02:/usr/share/elasticsearch/data
     environment:
+      - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
       - node.name=es02
       - cluster.name={{ swarm_elasticsearch_cluster_name }}
       - cluster.initial_master_nodes=es01,es02,es03,es04
       - discovery.seed_hosts=es01,es03,es04
+      - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
       - bootstrap.memory_lock=true
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -171,7 +172,7 @@ services:
           "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
         ]
       interval: 10s
-      timeout: 10s
+      timeout: 40s
       retries: 120
     secrets:
       - elasticsearch_password
@@ -195,6 +196,7 @@ services:
       - cluster.name={{ swarm_elasticsearch_cluster_name }}
       - cluster.initial_master_nodes=es01,es02,es03,es04
       - discovery.seed_hosts=es01,es02,es04
+      - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
       - bootstrap.memory_lock=true
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -218,7 +220,7 @@ services:
           "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
         ]
       interval: 10s
-      timeout: 10s
+      timeout: 40s
       retries: 120
     secrets:
       - elasticsearch_password
@@ -242,6 +244,7 @@ services:
       - cluster.name={{ swarm_elasticsearch_cluster_name }}
       - cluster.initial_master_nodes=es01,es02,es03,es04
       - discovery.seed_hosts=es01,es02,es03
+      - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
       - bootstrap.memory_lock=true
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -265,7 +268,7 @@ services:
           "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
         ]
       interval: 10s
-      timeout: 10s
+      timeout: 40s
       retries: 120
     secrets:
       - elasticsearch_password
@@ -285,12 +288,12 @@ services:
       - certs:/usr/share/kibana/config/certs
       - kibanadata:/usr/share/kibana/data
     ports:
-      - ${KIBANA_PORT}:5601
+      - {{ swarm_kibana_port }}:5601
     environment:
       - SERVERNAME=kibana
       - ELASTICSEARCH_HOSTS=https://es01:9200
       - ELASTICSEARCH_USERNAME=kibana_system
-      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+      - ELASTICSEARCH_PASSWORD={{ swarm_kibana_password }}
       - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
     healthcheck:
       test:
@@ -299,7 +302,7 @@ services:
           "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",
         ]
       interval: 10s
-      timeout: 10s
+      timeout: 40s
       retries: 120
     secrets:
       - elasticsearch_password

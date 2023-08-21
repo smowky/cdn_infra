@@ -8,10 +8,11 @@ swarm_elasticsearch_config_dir: '{{ swarm_elasticsearch_stack_dir }}/elasticsear
 swarm_elasticsearch_image: 'docker.elastic.co/elasticsearch/elasticsearch'
 swarm_elasticsearch_kibana_image: 'docker.elastic.co/kibana/kibana'
 swarm_elasticsearch_image_version: '8.9.1'
-swarm_elasticsearch_cpu_limits: 0.5
-swarm_elasticsearch_memory_limits: 500M
+swarm_elasticsearch_cpu_limits: 1
+swarm_elasticsearch_memory_limits: 1G
 swarm_elasticsearch_cluster_name: 'cdn-test-cluster'
-swarm_elasticsearch_java_opts:
+swarm_elasticsearch_java_opts: '-Xms500m -Xmx500m'
 swarm_elasticsearch_port: 9200
+swarm_kibana_port: 5601
 swarm_elasticsearch_kibana_cpu_limits: 0.5
 swarm_elasticsearch_kibana_memory_limits: 500M
