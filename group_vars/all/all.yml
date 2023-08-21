@@ -23,6 +23,5 @@ user:
 admin_mail: "smowky@psylogical.org"
 
 # nginx
+nginx_conf_directory: '/etc/nginx'
 nginx_vhost_directory: "{{ nginx_conf_directory }}/sites-enabled"
-
-
