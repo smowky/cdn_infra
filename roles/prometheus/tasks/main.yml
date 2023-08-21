@@ -39,6 +39,14 @@
   notify:
     - Reload nginx
 
+- name: Flush handlers # fix failure in first deploy, due missing grafana vhost on nginx unable to communicate with grafana
+  meta: flush_handlers
+
+- name: Update /etc/hosts with grafana record
+  lineinfile:
+    src: /etc/hosts
+    line: '127.0.1.2 grafana-cdn.psylogical.org'
+
 - name: Install grafana dashboards
   block:
     - name: grafana dashoards
