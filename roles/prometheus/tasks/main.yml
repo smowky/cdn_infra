@@ -44,7 +44,7 @@
 
 - name: Update /etc/hosts with grafana record
   lineinfile:
-    src: /etc/hosts
+    path: '/etc/hosts'
     line: '127.0.1.2 grafana-cdn.psylogical.org'
 
 - name: Install grafana dashboards
