@@ -9,8 +9,8 @@ services:
       replicas: 1
     user: "0"
     environment:
-      ELASTIC_PASSWORD={{ swarm_elasticsearch_password }} # this is stupid, and there has to be a better way, rewrite the whole thing to ansible tasks
-      KIBANA_PASSWORD={{ swarm_kibana_password }} # same here
+      - ELASTIC_PASSWORD="{{ swarm_elasticsearch_password }}" # this is stupid, and there has to be a better way, rewrite the whole thing to ansible tasks
+      - KIBANA_PASSWORD="{{ swarm_kibana_password }}" # same here
     command: >
       bash -c '
         export ELASTIC_PASSWORD="$(cat /run/secrets/elasticsearch_password)";
