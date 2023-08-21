@@ -70,7 +70,7 @@
     volumes:
     - "{{ certbot_conf_dir }}/:/etc/letsencrypt/"
     - "{{ certbot_conf_dir }}/www/:/var/www/certbot/"
-    command: certonly --webroot --email {{ certbot_email }} --agree-tos --webroot-path=/var/www/certbot/ -d {{ nginx_server_name }}
+    command: certonly --webroot --email {{ certbot_email }} --agree-tos --webroot-path=/var/www/certbot/ -d {{ nginx_default_server_name }}
   when: nginx_disable_default_ssl
 
 # firewall
