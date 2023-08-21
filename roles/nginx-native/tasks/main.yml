@@ -59,7 +59,7 @@
 
 - name: Check if cert files exist
   stat:
-    path: "{{ certbot_conf_dir }}/live/{{ server_name }}"
+    path: "{{ certbot_conf_dir }}/live/{{ nginx_default_server_name }}"
   register: certbot_certs
   when: nginx_disable_default_ssl
 

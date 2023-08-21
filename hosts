@@ -1,2 +1,2 @@
 [all]
-cdn.psylogical.org ansible_host=165.227.137.4
+cdn.psylogical.org ansible_host=127.0.0.1
