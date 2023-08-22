@@ -86,7 +86,6 @@ services:
       #- ELASTIC_PASSWORD_FILE=/run/secrets/elasticsearch_password
       - ELASTIC_PASSWORD={{ swarm_elasticsearch_password }}
       - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
-      - network.host: 0.0.0.0
       - bootstrap.memory_lock=true
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -148,7 +147,6 @@ services:
       - discovery.seed_hosts=es01,es03
       - ELASTIC_PASSWORD={{ swarm_elasticsearch_password }}
       - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
-      - network.host: 0.0.0.0
       - bootstrap.memory_lock=true
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -202,7 +200,6 @@ services:
       - discovery.seed_hosts=es01,es02
       - ELASTIC_PASSWORD={{ swarm_elasticsearch_password }}
       - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
-      - network.host: 0.0.0.0
       - bootstrap.memory_lock=true
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
