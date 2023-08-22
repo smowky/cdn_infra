@@ -40,12 +40,6 @@ services:
           "      - localhost\n"\
           "    ip:\n"\
           "      - 127.0.0.1\n"\
-          "  - name: es04\n"\
-          "    dns:\n"\
-          "      - es04\n"\
-          "      - localhost\n"\
-          "    ip:\n"\
-          "      - 127.0.0.1\n"\
           > config/certs/instances.yml;
           bin/elasticsearch-certutil cert --silent --pem -out config/certs/certs.zip --in config/certs/instances.yml --ca-cert config/certs/ca/ca.crt --ca-key config/certs/ca/ca.key;
           unzip config/certs/certs.zip -d config/certs;
@@ -87,11 +81,12 @@ services:
     environment:
       - node.name=es01
       - cluster.name={{ swarm_elasticsearch_cluster_name }}
-      - cluster.initial_master_nodes=es01,es02,es03,es04
-      - discovery.seed_hosts=es02,es03,es04
+      - cluster.initial_master_nodes=es01,es02,es03
+      - discovery.seed_hosts=es02,es03
       #- ELASTIC_PASSWORD_FILE=/run/secrets/elasticsearch_password
       - ELASTIC_PASSWORD={{ swarm_elasticsearch_password }}
       - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+      - network.host: 0.0.0.0
       - bootstrap.memory_lock=true
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -104,6 +99,10 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=basic
+    networks:
+      elasticserach-default:
+        aliases:
+          - es01
     ulimits:
       memlock:
         soft: -1
@@ -143,12 +142,13 @@ services:
       - certs:/usr/share/elasticsearch/config/certs
       - esdata02:/usr/share/elasticsearch/data
     environment:
-      - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
       - node.name=es02
       - cluster.name={{ swarm_elasticsearch_cluster_name }}
-      - cluster.initial_master_nodes=es01,es02,es03,es04
-      - discovery.seed_hosts=es01,es03,es04
+      - cluster.initial_master_nodes=es01,es02,es03
+      - discovery.seed_hosts=es01,es03
+      - ELASTIC_PASSWORD={{ swarm_elasticsearch_password }}
       - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+      - network.host: 0.0.0.0
       - bootstrap.memory_lock=true
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -161,6 +161,10 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=basic
+    networks:
+      elasticserach-default:
+        aliases:
+          - es02
     ulimits:
       memlock:
         soft: -1
@@ -180,7 +184,7 @@ services:
 
   es03:
     depends_on:
-      - es02
+      - es01
     image: {{ swarm_elasticsearch_image }}:{{ swarm_elasticsearch_image_version }}
     deploy:
       replicas: 1 
@@ -194,9 +198,11 @@ services:
     environment:
       - node.name=es03
       - cluster.name={{ swarm_elasticsearch_cluster_name }}
-      - cluster.initial_master_nodes=es01,es02,es03,es04
-      - discovery.seed_hosts=es01,es02,es04
+      - cluster.initial_master_nodes=es01,es02,es03
+      - discovery.seed_hosts=es01,es02
+      - ELASTIC_PASSWORD={{ swarm_elasticsearch_password }}
       - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+      - network.host: 0.0.0.0
       - bootstrap.memory_lock=true
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -209,54 +215,10 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=basic
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
-        ]
-      interval: 10s
-      timeout: 40s
-      retries: 120
-    secrets:
-      - elasticsearch_password
-      - kibana_password
-
-  es04:
-    depends_on:
-      - es03
-    image: {{ swarm_elasticsearch_image }}:{{ swarm_elasticsearch_image_version }}
-    deploy:
-      replicas: 1 
-      resources:
-        limits:
-          cpus: '{{ swarm_elasticsearch_cpu_limits }}'
-          memory: {{ swarm_elasticsearch_memory_limits }}
-    volumes:
-      - certs:/usr/share/elasticsearch/config/certs
-      - esdata04:/usr/share/elasticsearch/data
-    environment:
-      - node.name=es04
-      - cluster.name={{ swarm_elasticsearch_cluster_name }}
-      - cluster.initial_master_nodes=es01,es02,es03,es04
-      - discovery.seed_hosts=es01,es02,es03
-      - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
-      - bootstrap.memory_lock=true
-      - xpack.security.enabled=true
-      - xpack.security.http.ssl.enabled=true
-      - xpack.security.http.ssl.key=certs/es04/es04.key
-      - xpack.security.http.ssl.certificate=certs/es04/es04.crt
-      - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
-      - xpack.security.transport.ssl.enabled=true
-      - xpack.security.transport.ssl.key=certs/es04/es04.key
-      - xpack.security.transport.ssl.certificate=certs/es04/es04.crt
-      - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
-      - xpack.security.transport.ssl.verification_mode=certificate
-      - xpack.license.self_generated.type=basic
+    networks:
+      elasticserach-default:
+        aliases:
+          - es03
     ulimits:
       memlock:
         soft: -1
@@ -287,6 +249,10 @@ services:
     volumes:
       - certs:/usr/share/kibana/config/certs
       - kibanadata:/usr/share/kibana/data
+    networks:
+      elasticserach-default:
+        aliases:
+          - kibana
     ports:
       - {{ swarm_kibana_port }}:5601
     environment:
@@ -308,6 +274,12 @@ services:
       - elasticsearch_password
       - kibana_password
 
+networks:
+  elasticserach-default:
+    driver: overlay
+    attachable: true
+    name: elasticserach-default
+
 secrets:
   elasticsearch_password:
     external: true
@@ -322,8 +294,6 @@ volumes:
   esdata02:
     driver: local
   esdata03:
-    driver: local
-  esdata04:
     driver: local
   kibanadata:
     driver: local

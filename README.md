@@ -17,6 +17,6 @@ either run localy on target node or update node IP and run `bootstrap` playbook
 ## prerequisities
 `apt update`
 
-`apt install ansible git`
+`apt install ansible git -y`
 
 `git clone https://github.com/smowky/cdn_infra.git`
