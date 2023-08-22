@@ -69,7 +69,6 @@ services:
     image: {{ swarm_elasticsearch_image }}:{{ swarm_elasticsearch_image_version }}
     deploy:
       replicas: 1 
-      endpoint_mode: dnsrr
       resources:
         limits:
           cpus: '{{ swarm_elasticsearch_cpu_limits }}'
@@ -100,7 +99,7 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=basic
     networks:
-      elasticserach_default:
+      elasticsearch_default:
         aliases:
           - es01
     ulimits:
@@ -134,7 +133,6 @@ services:
     image: {{ swarm_elasticsearch_image }}:{{ swarm_elasticsearch_image_version }}
     deploy:
       replicas: 1 
-      endpoint_mode: dnsrr
       resources:
         limits:
           cpus: '{{ swarm_elasticsearch_cpu_limits }}'
@@ -163,7 +161,7 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=basic
     networks:
-      elasticserach_default:
+      elasticsearch_default:
         aliases:
           - es02
     ulimits:
@@ -189,7 +187,6 @@ services:
     image: {{ swarm_elasticsearch_image }}:{{ swarm_elasticsearch_image_version }}
     deploy:
       replicas: 1 
-      endpoint_mode: dnsrr
       resources:
         limits:
           cpus: '{{ swarm_elasticsearch_cpu_limits }}'
@@ -218,7 +215,7 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=basic
     networks:
-      elasticserach_default:
+      elasticsearch_default:
         aliases:
           - es03
     ulimits:
@@ -252,7 +249,7 @@ services:
       - certs:/usr/share/kibana/config/certs
       - kibanadata:/usr/share/kibana/data
     networks:
-      elasticserach_default:
+      elasticsearch_default:
         aliases:
           - kibana
     ports:
@@ -277,10 +274,10 @@ services:
       - kibana_password
 
 networks:
-  elasticserach_default:
+  elasticsearch_default:
     driver: overlay
     attachable: true
-    name: elasticserach_default
+    name: elasticsearch_default
 
 secrets:
   elasticsearch_password:
