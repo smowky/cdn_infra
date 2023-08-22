@@ -5,21 +5,28 @@ swarm_elasticsearch: false
 swarm_elasticsearch_stack_dir: '/root/elasticsearch'
 swarm_elasticsearch_config_dir: '{{ swarm_elasticsearch_stack_dir }}/elasticsearch'
 
+# es
 swarm_elasticsearch_image: 'docker.elastic.co/elasticsearch/elasticsearch'
-swarm_elasticsearch_kibana_image: 'docker.elastic.co/kibana/kibana'
 swarm_elasticsearch_image_version: '8.9.1'
 swarm_elasticsearch_cpu_limits: 1
 swarm_elasticsearch_memory_limits: 2G
 swarm_elasticsearch_cluster_name: 'cdn-test-cluster'
 swarm_elasticsearch_java_opts: '-Xms1g -Xmx1g'
 swarm_elasticsearch_port: 9200
+
+# kibana
+swarm_kibana_image: 'docker.elastic.co/kibana/kibana'
+swarm_kibana_cpu_limits: 1
+swarm_kibana_memory_limits: 1G
+swarm_kibana_user: kibana_system
 swarm_kibana_port: 5601
-swarm_elasticsearch_kibana_cpu_limits: 0.5
-swarm_elasticsearch_kibana_memory_limits: 500M
+
 
 # nginx
 kibana_server_name: 'kibana-cdn.psylogical.org'
+kibana_logging: true
+kibana_ssl: false
 
 # fw
-  #ufw_rules_elasticsearch:
-  #  - { 'rule': 'allow', 'to_port': '2376', 'protocol': 'tcp', 'from_ip': 'any' }
+#ufw_rules_elasticsearch:
+#  - { 'rule': 'allow', 'to_port': '2376', 'protocol': 'tcp', 'from_ip': 'any' }

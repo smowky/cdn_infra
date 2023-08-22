@@ -20,3 +20,20 @@ either run localy on target node or update node IP and run `bootstrap` playbook
 `apt install ansible git -y`
 
 `git clone https://github.com/smowky/cdn_infra.git`
+
+## dns
+following default dns records are used
+
+-  cdn.psylogical.org
+
+-  grafana-cdn.psylogical.org
+
+-  kibana-cdn.psylogical.org
+
+## ssl
+
+
+## logins
+kibana:
+  user: elastic
+  pass: swarm_elasticsearch_password var in vault_vars file

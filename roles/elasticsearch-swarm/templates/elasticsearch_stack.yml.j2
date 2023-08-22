@@ -52,8 +52,8 @@ services:
         find . -type f -exec chmod 640 \{\} \;;
         echo "Waiting for Elasticsearch availability";
         until curl -s --cacert config/certs/ca/ca.crt https://es01:9200 | grep -q "missing authentication credentials"; do sleep 30; done;
-        echo "Setting kibana_system password";
-        until curl -s -X POST --cacert config/certs/ca/ca.crt -u "elastic:{{ swarm_elasticsearch_password }}" -H "Content-Type: application/json" https://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"{{ swarm_kibana_password }}\"}" | grep -q "^{}"; do sleep 10; done;
+        echo "Setting {{ swarm_kibana_user }} password";
+        until curl -s -X POST --cacert config/certs/ca/ca.crt -u "elastic:{{ swarm_elasticsearch_password }}" -H "Content-Type: application/json" https://es01:9200/_security/user/{{ swarm_kibana_user }}/_password -d "{\"password\":\"{{ swarm_kibana_password }}\"}" | grep -q "^{}"; do sleep 10; done;
         echo "All done!";
       '
     networks:
@@ -91,7 +91,7 @@ services:
       - cluster.initial_master_nodes=es01,es02,es03
       - discovery.seed_hosts=es02,es03
       #- ELASTIC_PASSWORD_FILE=/run/secrets/elasticsearch_password
-      - ELASTIC_PASSWORD={{ swarm_elasticsearch_password }}
+      - ELASTIC_PASSWORD={{ swarm_elasticsearch_password }}# TODO not happy with this
       - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
       - network.host=0.0.0.0
       - bootstrap.memory_lock=true
@@ -240,13 +240,13 @@ services:
   kibana:
     depends_on:
       - es01
-    image: {{ swarm_elasticsearch_kibana_image }}:{{ swarm_elasticsearch_image_version }}
+    image: {{ swarm_kibana_image }}:{{ swarm_elasticsearch_image_version }}
     deploy:
       replicas: 1 
       resources:
         limits:
-          cpus: '{{ swarm_elasticsearch_kibana_cpu_limits }}'
-          memory: {{ swarm_elasticsearch_kibana_memory_limits }}
+          cpus: '{{ swarm_kibana_cpu_limits }}'
+          memory: {{ swarm_kibana_memory_limits }}
     volumes:
       - certs:/usr/share/kibana/config/certs
       - kibanadata:/usr/share/kibana/data
@@ -257,8 +257,8 @@ services:
     environment:
       - SERVERNAME=kibana
       - ELASTICSEARCH_HOSTS=https://es01:9200
-      - ELASTICSEARCH_USERNAME=kibana_system
-      - ELASTICSEARCH_PASSWORD={{ swarm_kibana_password }}
+      - ELASTICSEARCH_USERNAME={{ swarm_kibana_user }}
+      - ELASTICSEARCH_PASSWORD={{ swarm_kibana_password }} # TODO not happy with this
       - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
     healthcheck:
       test:
