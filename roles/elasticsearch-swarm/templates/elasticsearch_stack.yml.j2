@@ -81,7 +81,10 @@ services:
       - certs:/usr/share/elasticsearch/config/certs
       - esdata01:/usr/share/elasticsearch/data
     ports:
-      - {{ swarm_elasticsearch_port }}:9200
+      - target: {{ swarm_elasticsearch_port }}
+        published: 9200
+        protocol: tcp
+        mode: host
     environment:
       - node.name=es01
       - cluster.name={{ swarm_elasticsearch_cluster_name }}
@@ -90,6 +93,7 @@ services:
       #- ELASTIC_PASSWORD_FILE=/run/secrets/elasticsearch_password
       - ELASTIC_PASSWORD={{ swarm_elasticsearch_password }}
       - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+      - network.host=0.0.0.0
       - bootstrap.memory_lock=true
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
