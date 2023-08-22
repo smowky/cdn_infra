@@ -99,9 +99,7 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=basic
     networks:
-      elasticsearch_default:
-        aliases:
-          - es01
+      - elasticsearch_default
     ulimits:
       memlock:
         soft: -1
@@ -161,9 +159,7 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=basic
     networks:
-      elasticsearch_default:
-        aliases:
-          - es02
+      - elasticsearch_default
     ulimits:
       memlock:
         soft: -1
@@ -215,9 +211,7 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=basic
     networks:
-      elasticsearch_default:
-        aliases:
-          - es03
+      - elasticsearch_default
     ulimits:
       memlock:
         soft: -1
@@ -249,9 +243,7 @@ services:
       - certs:/usr/share/kibana/config/certs
       - kibanadata:/usr/share/kibana/data
     networks:
-      elasticsearch_default:
-        aliases:
-          - kibana
+      - elasticsearch_default
     ports:
       - {{ swarm_kibana_port }}:5601
     environment:
