@@ -16,3 +16,7 @@ swarm_elasticsearch_port: 9200
 swarm_kibana_port: 5601
 swarm_elasticsearch_kibana_cpu_limits: 0.5
 swarm_elasticsearch_kibana_memory_limits: 500M
+
+
+  #ufw_rules_elasticsearch:
+  #  - { 'rule': 'allow', 'to_port': '2376', 'protocol': 'tcp', 'from_ip': 'any' }

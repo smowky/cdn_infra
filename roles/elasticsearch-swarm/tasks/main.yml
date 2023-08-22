@@ -1,4 +1,22 @@
 ---
+# setup default firewall
+- name: Add custom rules UFW
+  ufw:
+    rule: "{{ item.rule }}"
+    interface: "{{ item.interface | default('') }}"
+    direction: "{{ item.direction | default('in') }}"
+    from_ip: "{{ item.from_ip | default('any') }}"
+    to_ip: "{{ item.to_ip | default('any') }}"
+    from_port: "{{ item.from_port | default('') }}"
+    to_port: "{{ item.to_port | default('') }}"
+    protocol: "{{ item.protocol | default('any') }}"
+    log: "{{ item.log | default(False) }}"
+    insert: "{{ item.insert | default(omit) }}"
+    comment: "{{ item.comment | default('') }}"
+  when: ufw_rules_elasticsearch is defined
+  with_items: "{{ ufw_rules_elasticsearch }}"
+  notify: reload ufw
+
 - name: Create stack directory
   file:
     path: "{{ swarm_elasticsearch_stack_dir }}"

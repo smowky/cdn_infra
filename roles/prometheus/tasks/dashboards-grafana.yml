@@ -1,5 +1,12 @@
 ---
 # Create project folders
+- name: Make sure grafana is running
+  wait_for:
+    host: "http://{{ grafana_api_url }}"
+    delay: 3
+    timeout: 300
+    state: drained
+
 - name: Create a folder
   community.grafana.grafana_folder:
     url: "http://{{ grafana_api_url }}"

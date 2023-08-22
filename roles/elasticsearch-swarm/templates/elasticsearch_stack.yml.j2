@@ -7,6 +7,8 @@ services:
       - certs:/usr/share/elasticsearch/config/certs
     deploy:
       replicas: 1
+      restart_policy:
+        condition: none
     user: "0"
     environment:
       - ELASTIC_PASSWORD="{{ swarm_elasticsearch_password }}" # this is stupid, and there has to be a better way, rewrite the whole thing to ansible tasks
@@ -54,6 +56,8 @@ services:
         until curl -s -X POST --cacert config/certs/ca/ca.crt -u "elastic:{{ swarm_elasticsearch_password }}" -H "Content-Type: application/json" https://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"{{ swarm_kibana_password }}\"}" | grep -q "^{}"; do sleep 10; done;
         echo "All done!";
       '
+    networks:
+      - elasticsearch_default
     healthcheck:
       test: ["CMD-SHELL", "[ -f config/certs/es01/es01.crt ]"]
       interval: 1s
