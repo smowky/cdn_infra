@@ -62,3 +62,10 @@
     compose:
       - "{{ swarm_elasticsearch_stack_dir }}/elasticsearch_stack.yml"
   tags: stack-reload
+
+- name: Enable nginx kibana vhost on hypervisor
+  template:
+    src: 'kibana_vhost.conf.j2'
+    dest: "{{ nginx_vhost_directory }}/kibana.conf"
+  notify:
+    - Reload nginx

@@ -17,6 +17,9 @@ swarm_kibana_port: 5601
 swarm_elasticsearch_kibana_cpu_limits: 0.5
 swarm_elasticsearch_kibana_memory_limits: 500M
 
+# nginx
+kibana_server_name: 'kibana-cdn.psylogical.org'
 
+# fw
   #ufw_rules_elasticsearch:
   #  - { 'rule': 'allow', 'to_port': '2376', 'protocol': 'tcp', 'from_ip': 'any' }
