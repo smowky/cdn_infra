@@ -275,9 +275,8 @@ services:
 
 networks:
   elasticsearch_default:
-    driver: overlay
-    attachable: true
     name: elasticsearch_default
+    external: true
 
 secrets:
   elasticsearch_password:

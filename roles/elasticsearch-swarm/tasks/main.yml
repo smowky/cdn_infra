@@ -23,6 +23,12 @@
     lstrip_blocks: yes
     mode: '600'
 
+- name: Create elastic-intranet network
+  docker_network:
+    name: 'elasticsearch_default'
+    driver: overlay
+    scope: swarm
+
 - name: Create docker secret with admin password
   docker_secret:
     name: "{{ item.swarm_secret_name }}"
