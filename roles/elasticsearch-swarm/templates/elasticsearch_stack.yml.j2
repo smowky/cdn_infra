@@ -102,6 +102,7 @@ services:
       - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.monitoring.enabled=true
       - xpack.license.self_generated.type=basic
     networks:
       - elasticsearch_default
@@ -162,6 +163,7 @@ services:
       - xpack.security.transport.ssl.certificate=certs/es02/es02.crt
       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.monitoring.enabled=true
       - xpack.license.self_generated.type=basic
     networks:
       - elasticsearch_default
@@ -214,6 +216,7 @@ services:
       - xpack.security.transport.ssl.certificate=certs/es03/es03.crt
       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.monitoring.enabled=true
       - xpack.license.self_generated.type=basic
     networks:
       - elasticsearch_default
@@ -256,7 +259,10 @@ services:
       - ELASTICSEARCH_USERNAME={{ swarm_kibana_user }}
       - "ELASTICSEARCH_PASSWORD={{ swarm_kibana_password }}" # TODO not happy with this
       - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
-      - xpack.security.encryptionKey={{ swarm_kibana_encryptionkey }}
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY="min-32-byte-long-NEW-encryption-key"
+      - xpack.encryptedSavedObjects.encryptionKey="{{ swarm_kibana_encryptionkey }}" 
+      - xpack.reporting.encryptionKey="{{ swarm_kibana_encryptionkey_reporting }}" 
+      - xpack.security.encryptionKey="{{ swarm_kibana_encryptionkey_security }}" 
       - xpack.security.session.idleTimeout=1h
       - xpack.security.session.lifespan=30d
     healthcheck:

@@ -9,7 +9,7 @@ include              /etc/nginx/modules-enabled/*.conf;
 
 events {
     multi_accept       on;
-    worker_connections {{ nginx_worker_connections }};
+    worker_connections {{ nginx_swarm_worker_connections }};
 }
 
 http {
@@ -28,8 +28,8 @@ http {
     default_type           application/octet-stream;
 
     # Logging
-    access_log             {{ nginx_access_logs }};
-    error_log              {{ nginx_error_logs }} warn;
+    access_log             {{ nginx_swarm_access_logs }};
+    error_log              {{ nginx_swarm_error_logs }} warn;
 
     # OCSP Stapling
     ssl_stapling           on;
@@ -38,6 +38,6 @@ http {
     resolver_timeout       2s;
 
     # Load configs
-    include                {{ nginx_configuration_directory }};
-    include                {{ nginx_vhost_directory }};
+    include                {{ nginx_swarm_configuration_directory }}/*.conf;
+    include                {{ nginx_swarm_vhost_directory }}/*;
 }

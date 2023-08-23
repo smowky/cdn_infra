@@ -22,20 +22,20 @@ either run localy on target node or update node IP and run `bootstrap` playbook
 `git clone https://github.com/smowky/cdn_infra.git`
 
 ## dns
-update dns records to your liking
-- grafana_server_name
-
-- kibana_server_name
-
-- nginx_default_server_name
-
+update dns records vars to your liking
+- `grafana_server_name`
+- `kibana_server_name`
+- `nginx_default_server_name`
+- `nginx_swarm_default_server_name`
 
 ## ssl
 
 
 ## logins
-kibana:
+**kibana:**
+  - user: elastic
+  - pass: `swarm_elasticsearch_password` var in `vault_vars` file
 
-  user: elastic
-
-  pass: swarm_elasticsearch_password var in vault_vars file
+**grafana**
+  - user: admin
+  - pass: `gf_security_admin_password` var in `vault_vars` file

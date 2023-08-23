@@ -14,8 +14,8 @@ location ~ /\.(?!well-known) {
 # http//cipherli.st/ from 2017-04-21
 
 # Mozilla Intermediate configuration
-ssl_ciphers "{{ nginx_ssl_ciphers }}";
-ssl_protocols {{ nginx_ssl_protocols }};
+ssl_ciphers "{{ nginx_swarm_ssl_ciphers }}";
+ssl_protocols {{ nginx_swarm_ssl_protocols }};
 
 # SSL
 ssl_ecdh_curve secp384r1; # Requires nginx >= 1.1.0
@@ -26,14 +26,12 @@ ssl_session_tickets    off;
 
 
 # Diffie-Hellman
-ssl_dhparam {{ nginx_ssl_conf }}/dhparams_4096.pem;
+ssl_dhparam {{ nginx_swarm_ssl_directory }}/dhparams_4096.pem;
 
 # HSTS
 #add_header Strict-Transport-Security "max-age=86400; includeSubdomains; preload";
 #
 add_header X-Frame-Options DENY;
-ssl_session_tickets off; # Requires nginx >= 1.5.9
-
 add_header X-XSS-Protection          "1; mode=block" always;
 add_header X-Content-Type-Options    "nosniff" always;
 add_header Referrer-Policy           "no-referrer-when-downgrade" always;

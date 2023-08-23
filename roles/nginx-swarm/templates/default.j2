@@ -2,10 +2,9 @@
 server {
     listen      80;
     listen      [::]:80;
-    server_name {{ nginx_default_server_name }};
-    include     nginxconfig.io/letsencrypt.conf;
+    server_name {{ nginx_swarm_default_server_name }};
 
     location / {
-        return 301 https://{{ nginx_default_server_name }}$request_uri;
+        return 301 https://{{ nginx_swarm_default_server_name }}$request_uri;
     }
 }

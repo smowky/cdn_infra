@@ -1,65 +1,68 @@
 ---
-# Install
-- name: Install necessary packages
-  apt:
-    name: "{{ nginx_native_installed_packages }}"
-    state: latest
-
 # Setup and config    
 - name: Set up nginx configuration
   template: 
     src: nginx.conf.j2 
-    dest: "{{ nginx_conf_directory }}/nginx.conf"
+    dest: "{{ nginx_swarm_conf_directory }}/nginx.conf"
     owner: root 
     group: root 
     mode: 0644
+  notify: Restart nginx
 
 - name: Create nginx default site config
   template: 
     src: default.j2 
-    dest: "{{ nginx_conf_directory }}/sites-enabled/default"
+    dest: "{{ nginx_swarm_vhost_directory }}/default"
     owner: root 
     group: root 
     mode: 0644
+  notify: Reload nginx
 
 - name: Create nginx default ssl site config
   template: 
     src: default_ssl.j2
-    dest: "{{ nginx_conf_directory }}/sites-enabled/default_ssl"
+    dest: "{{ nginx_swarm_vhost_directory }}/default_ssl"
     owner: root 
     group: root 
     mode: 0644
-  when: nginx_disable_default_ssl
+  when: nginx_swarm_disable_default_ssl
+  notify: Reload nginx
 
 - name: Set up nginx default site HTML
   template: 
     src: index.html.j2 
-    dest: "{{ nginx_root_directory }}/index.html"
+    dest: "{{ nginx_swarm_root_directory }}/index.html"
     owner: www-data 
     group: www-data 
     mode: 0644
+  notify: Reload nginx
 
 - name: Generate 4096b DH
-  command: "/usr/bin/openssl dhparam -out {{ nginx_ssl_directory }}/dhparams_4096.pem 4096"
+  command: "/usr/bin/openssl dhparam -out {{ nginx_swarm_ssl_directory }}/dhparams_4096.pem 4096"
   args:
-    creates: "{{ nginx_ssl_directory }}/dhparams_4096.pem"
+    creates: "{{ nginx_swarm_ssl_directory }}/dhparams_4096.pem"
 
 - name: Add security input 
   template:
     src: ssl_modern.include.j2
-    dest: "{{ nginx_conf_directory }}/conf.d/ssl_modern.include"
+    dest: "{{ nginx_swarm_configuration_directory }}/ssl_modern.include"
     mode: 0644
   tags: nginx-ssl
-  when: nginx_disable_default_ssl
+  when: nginx_swarm_disable_default_ssl
+  notify: Reload nginx
 
-- name: create logrotate config
-  template:
-    src: nginx_logrotate.j2
-    dest: /etc/logrotate.d/nginx
+- name: Check if cert files exist
+  stat:
+    path: "{{ certbot_conf_dir }}/live/{{ nginx_swarm_default_server_name }}"
+  register: certbot_certs
+  when: nginx_swarm_disable_default_ssl
 
-# firewall
-- name: Set up UFW - allow TCP 80
-  ufw: rule=allow port=80 proto=tcp
-
-- name: Set up UFW - allow TCP 443
-  ufw: rule=allow port=443 proto=tcp
+- name: Issue certificate with certbot command
+  docker_container:
+    name: "{{ certbot_hostname }}"
+    image: "{{ certbot_image }}"
+    volumes:
+    - "{{ certbot_conf_dir }}/:/etc/letsencrypt/"
+    - "{{ certbot_conf_dir }}/www/:/var/www/certbot/"
+    command: certonly --webroot --email {{ certbot_email }} --agree-tos --webroot-path=/var/www/certbot/ -d {{ nginx_swarm_default_server_name }}
+  when: nginx_swarm_disable_default_ssl

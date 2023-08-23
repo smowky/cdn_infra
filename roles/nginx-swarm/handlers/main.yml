@@ -1,0 +1,7 @@
+---
+- name: Reload nginx
+  shell: "docker service update --force nginx_nginx"
+  register: result
+  until: result.stdout.find("Service converged") != -1
+  retries: 5
+  delay: 60
