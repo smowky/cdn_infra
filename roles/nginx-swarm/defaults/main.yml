@@ -1,8 +1,10 @@
 ---
+# defaults
 nginx_swarm_conf_directory: '/opt/nginx'
 nginx_swarm_root_directory: '/opt/www/html'
 nginx_swarm_ssl_directory: '/opt/ssl'
 nginx_swarm_configuration_directory: "{{ nginx_swarm_conf_directory }}/conf.d"
+nginx_swarm_vhost_directory: "{{ nginx_swarm_conf_directory }}/sites-enabled" 
 
 nginx_swarm_worker_connections: 4096
 
@@ -23,3 +25,8 @@ certbot_image: certbot/certbot
 certbot_hostname: cb01
 certbot_conf_dir: /usr/share/certbot
 certbot_email: info@example.com
+
+# swarm
+swarm_nginx: false
+swarm_nginx_stack_dir: '/root/nginx'
+swarm_nginx_config_dir: '{{ swarm_nginx_stack_dir }}/nginx'

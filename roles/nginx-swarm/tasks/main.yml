@@ -66,3 +66,37 @@
     - "{{ certbot_conf_dir }}/www/:/var/www/certbot/"
     command: certonly --webroot --email {{ certbot_email }} --agree-tos --webroot-path=/var/www/certbot/ -d {{ nginx_swarm_default_server_name }}
   when: nginx_swarm_disable_default_ssl
+
+# swarm
+
+- name: Create stack directory
+  file:
+    path: "{{ swarm_nginx_stack_dir }}"
+    state: directory
+
+- name: Copy nginx stack prescription
+  template:
+    src: "nginx_stack.yml.j2"
+    dest: "{{ swarm_nginx_stack_dir }}/nginx_stack.yml"
+    lstrip_blocks: yes
+    mode: '600'
+
+- name: Create nginx config directory
+  file:
+    path: "{{ swarm_nginx_config_dir }}"
+    state: directory
+
+- name: Copy nginx config prescription
+  template:
+    src: "nginx_config.yml.j2"
+    dest: "{{ swarm_nginx_config_dir }}/nginx.yml"
+    lstrip_blocks: yes
+    mode: '600'
+
+- name: Ensure there is nginx
+  docker_stack:
+    state: present
+    name: nginx
+    compose:
+      - "{{ swarm_nginx_stack_dir }}/nginx_stack.yml"
+  tags: stack-reload
