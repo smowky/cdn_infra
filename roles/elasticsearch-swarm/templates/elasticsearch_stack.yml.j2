@@ -235,7 +235,6 @@ services:
       retries: 120
     secrets:
       - elasticsearch_password
-      - kibana_password
 
   kibana:
     depends_on:
@@ -260,6 +259,9 @@ services:
       - ELASTICSEARCH_USERNAME={{ swarm_kibana_user }}
       - ELASTICSEARCH_PASSWORD={{ swarm_kibana_password }} # TODO not happy with this
       - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
+      - xpack.security.encryptionKey={{ swarm_kibana_encryptionkey }}
+      - xpack.security.session.idleTimeout: "1h"
+      - xpack.security.session.lifespan: "30d"
     healthcheck:
       test:
         [

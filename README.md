@@ -22,18 +22,20 @@ either run localy on target node or update node IP and run `bootstrap` playbook
 `git clone https://github.com/smowky/cdn_infra.git`
 
 ## dns
-following default dns records are used
+update dns records to your liking
+- grafana_server_name
 
--  cdn.psylogical.org
+- kibana_server_name
 
--  grafana-cdn.psylogical.org
+- nginx_default_server_name
 
--  kibana-cdn.psylogical.org
 
 ## ssl
 
 
 ## logins
 kibana:
+
   user: elastic
+
   pass: swarm_elasticsearch_password var in vault_vars file
