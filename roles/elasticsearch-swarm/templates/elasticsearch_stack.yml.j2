@@ -10,9 +10,6 @@ services:
       restart_policy:
         condition: none
     user: "0"
-    environment:
-      - ELASTIC_PASSWORD="{{ swarm_elasticsearch_password }}" # this is stupid, and there has to be a better way, rewrite the whole thing to ansible tasks
-      - KIBANA_PASSWORD="{{ swarm_kibana_password }}" # same here
     command: >
       bash -c '
         if [ ! -f config/certs/ca.zip ]; then
@@ -91,7 +88,7 @@ services:
       - cluster.initial_master_nodes=es01,es02,es03
       - discovery.seed_hosts=es02,es03
       #- ELASTIC_PASSWORD_FILE=/run/secrets/elasticsearch_password
-      - ELASTIC_PASSWORD={{ swarm_elasticsearch_password }}# TODO not happy with this
+      - "ELASTIC_PASSWORD={{ swarm_elasticsearch_password }}"   # TODO not happy with this
       - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
       - network.host=0.0.0.0
       - bootstrap.memory_lock=true
@@ -151,7 +148,7 @@ services:
       - cluster.name={{ swarm_elasticsearch_cluster_name }}
       - cluster.initial_master_nodes=es01,es02,es03
       - discovery.seed_hosts=es01,es03
-      - ELASTIC_PASSWORD={{ swarm_elasticsearch_password }}
+      - "ELASTIC_PASSWORD={{ swarm_elasticsearch_password }}"
       - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
       - network.host=0.0.0.0
       - bootstrap.memory_lock=true
@@ -203,7 +200,7 @@ services:
       - cluster.name={{ swarm_elasticsearch_cluster_name }}
       - cluster.initial_master_nodes=es01,es02,es03
       - discovery.seed_hosts=es01,es02
-      - ELASTIC_PASSWORD={{ swarm_elasticsearch_password }}
+      - "ELASTIC_PASSWORD={{ swarm_elasticsearch_password }}"
       - "ES_JAVA_OPTS={{ swarm_elasticsearch_java_opts }}" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
       - network.host=0.0.0.0
       - bootstrap.memory_lock=true
@@ -257,7 +254,7 @@ services:
       - SERVERNAME=kibana
       - ELASTICSEARCH_HOSTS=https://es01:9200
       - ELASTICSEARCH_USERNAME={{ swarm_kibana_user }}
-      - ELASTICSEARCH_PASSWORD={{ swarm_kibana_password }} # TODO not happy with this
+      - "ELASTICSEARCH_PASSWORD={{ swarm_kibana_password }}" # TODO not happy with this
       - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
       - xpack.security.encryptionKey={{ swarm_kibana_encryptionkey }}
       - xpack.security.session.idleTimeout: "1h"
