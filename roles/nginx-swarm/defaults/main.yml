@@ -30,3 +30,9 @@ certbot_email: info@example.com
 swarm_nginx: false
 swarm_nginx_stack_dir: '/root/nginx'
 swarm_nginx_config_dir: '{{ swarm_nginx_stack_dir }}/nginx'
+swarm_nginx_docker_image: nginx
+swarm_nginx_docker_image_version: latest
+nginx_swarm_ssl_certs_dir:
+nginx_swarm_ssl_snake_oil_cert:
+nginx_swarm_ssl_snake_oil_key:
+
