@@ -27,11 +27,11 @@ certbot_conf_dir: /usr/share/certbot
 certbot_email: info@example.com
 
 # swarm
-swarm_nginx: false
-swarm_nginx_stack_dir: '/root/nginx'
-swarm_nginx_config_dir: '{{ swarm_nginx_stack_dir }}/nginx'
-swarm_nginx_docker_image: nginx
-swarm_nginx_docker_image_version: latest
+nginx_swarm: false
+nginx_swarm_stack_dir: '/root/nginx'
+nginx_swarm_config_dir: '{{ nginx_swarm_stack_dir }}/nginx'
+nginx_swarm_docker_image: nginx
+nginx_swarm_docker_image_version: latest
 nginx_swarm_ssl_certs_dir:
 nginx_swarm_ssl_snake_oil_cert:
 nginx_swarm_ssl_snake_oil_key:
