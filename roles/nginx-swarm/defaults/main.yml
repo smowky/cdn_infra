@@ -18,6 +18,7 @@ nginx_swarm_access_logs: '/opt/log/nginx/access.log'
 nginx_swarm_error_logs: '/opt/log/nginx/error.log'
 
 # custom settings
+nginx_swarm_extra_volumes: []
 nginx_swarm_disable_default_ssl: true
 nginx_swarm_default_server_name: 'swarm-cdn.psylogical.org'
 
