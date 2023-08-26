@@ -18,13 +18,6 @@
     path: "{{ nginx_swarm_config_dir }}"
     state: directory
 
-- name: Copy nginx config prescription
-  template:
-    src: "nginx_config.yml.j2"
-    dest: "{{ nginx_swarm_config_dir }}/nginx.yml"
-    lstrip_blocks: yes
-    mode: '600'
-
 # Setup and config    
 - name: Set up nginx configuration
   template: 
