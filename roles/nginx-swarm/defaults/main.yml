@@ -38,4 +38,3 @@ nginx_swarm_docker_image_version: latest
 nginx_swarm_ssl_certs_dir:
 nginx_swarm_ssl_snake_oil_cert:
 nginx_swarm_ssl_snake_oil_key:
-

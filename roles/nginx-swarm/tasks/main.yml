@@ -27,7 +27,6 @@
     - "{{ nginx_swarm_vhost_directory }}"
     - "{{ nginx_swarm_configuration_directory }}"
     - "{{ nginx_swarm_ssl_directory }}"
-    - "{{ nginx_swarm_ssl_directory }}"
     - "{{ nginx_swarm_root_directory }}"
     - "{{ nginx_swarm_conf_directory }}"
 

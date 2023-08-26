@@ -31,11 +31,21 @@ http {
     access_log             {{ nginx_access_logs }};
     error_log              {{ nginx_error_logs }} warn;
 
+    # enable compression
+    gzip: "on"
+    gzip_disable: "msie6"
+
     # OCSP Stapling
     ssl_stapling           on;
     ssl_stapling_verify    on;
     resolver               1.1.1.1 1.0.0.1 8.8.8.8 8.8.4.4 208.67.222.222 208.67.220.220 valid=60s;
     resolver_timeout       2s;
+
+    # timeouts
+    client_body_timeout 10;
+    client_header_timeout 10;
+    keepalive_timeout 13;
+    send_timeout 10;
 
     # Load configs
     include                {{ nginx_configuration_directory }}/*.conf;
