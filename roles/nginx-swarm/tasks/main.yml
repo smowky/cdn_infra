@@ -3,25 +3,25 @@
 
 - name: Create stack directory
   file:
-    path: "{{ swarm_nginx_stack_dir }}"
+    path: "{{ nginx_swarm_stack_dir }}"
     state: directory
 
 - name: Copy nginx stack prescription
   template:
     src: "nginx_stack.yml.j2"
-    dest: "{{ swarm_nginx_stack_dir }}/nginx_stack.yml"
+    dest: "{{ nginx_swarm_stack_dir }}/nginx_stack.yml"
     lstrip_blocks: yes
     mode: '600'
 
 - name: Create nginx config directory
   file:
-    path: "{{ swarm_nginx_config_dir }}"
+    path: "{{ nginx_swarm_config_dir }}"
     state: directory
 
 - name: Copy nginx config prescription
   template:
     src: "nginx_config.yml.j2"
-    dest: "{{ swarm_nginx_config_dir }}/nginx.yml"
+    dest: "{{ nginx_swarm_config_dir }}/nginx.yml"
     lstrip_blocks: yes
     mode: '600'
 
@@ -99,6 +99,6 @@
     state: present
     name: nginx
     compose:
-      - "{{ swarm_nginx_stack_dir }}/nginx_stack.yml"
+      - "{{ nginx_swarm_stack_dir }}/nginx_stack.yml"
   tags: stack-reload
 
