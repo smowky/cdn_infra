@@ -10,11 +10,11 @@ nginx_swarm_log_directory: "{{ nginx_swarm_conf_directory }}/logs"
 nginx_swarm_worker_connections: 4096
 
 # ssl config
+nginx_swarm_ssl: false
 nginx_swarm_ssl_protocols: "TLSv1.2 TLSv1.3"
 nginx_swarm_ssl_ciphers: 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-CHACHA20-POLY1305'
   
 # logging
-nginx_swarm_ssl: false
 nginx_swarm_access_logs: '/opt/log/nginx/access.log' 
 nginx_swarm_error_logs: '/opt/log/nginx/error.log'
 
@@ -27,7 +27,7 @@ nginx_swarm_default_server_name: 'swarm-cdn.psylogical.org'
 certbot_image: certbot/certbot
 certbot_hostname: cb01
 certbot_conf_dir: /usr/share/certbot
-certbot_email: info@example.com
+certbot_email: "{{ admin_mail }}"
 
 # swarm
 nginx_swarm: false

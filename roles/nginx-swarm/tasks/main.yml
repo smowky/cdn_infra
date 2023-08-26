@@ -56,7 +56,7 @@
     owner: root 
     group: root 
     mode: 0644
-  when: nginx_swarm_disable_default_ssl
+  when: nginx_swarm_ssl
   notify: Reload nginx
 
 - name: Set up nginx default site HTML
@@ -96,7 +96,7 @@
     - "{{ certbot_conf_dir }}/:/etc/letsencrypt/"
     - "{{ certbot_conf_dir }}/www/:/var/www/certbot/"
     command: certonly --webroot --email {{ certbot_email }} --agree-tos --webroot-path=/var/www/certbot/ -d {{ nginx_swarm_default_server_name }}
-  when: nginx_swarm_disable_default_ssl
+  when: nginx_swarm_ssl
 
 # Start swarm stack
 - name: Ensure there is nginx
