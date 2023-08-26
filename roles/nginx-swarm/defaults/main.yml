@@ -13,6 +13,7 @@ nginx_swarm_ssl_protocols: "TLSv1.2 TLSv1.3"
 nginx_swarm_ssl_ciphers: 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-CHACHA20-POLY1305'
   
 # logging
+nginx_swarm_ssl: false
 nginx_swarm_access_logs: '/opt/log/nginx/access.log' 
 nginx_swarm_error_logs: '/opt/log/nginx/error.log'
 
