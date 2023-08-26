@@ -6,6 +6,7 @@ nginx_swarm_ssl_directory: '/opt/ssl'
 nginx_swarm_configuration_directory: "{{ nginx_swarm_conf_directory }}/conf.d"
 nginx_swarm_vhost_directory: "{{ nginx_swarm_conf_directory }}/sites-enabled" 
 nginx_swarm_log_directory: "{{ nginx_swarm_conf_directory }}/logs" 
+
 nginx_swarm_worker_connections: 4096
 
 # ssl config

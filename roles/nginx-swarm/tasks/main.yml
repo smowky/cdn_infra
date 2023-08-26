@@ -18,6 +18,19 @@
     path: "{{ nginx_swarm_config_dir }}"
     state: directory
 
+- name: Create working directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ nginx_swarm_log_directory }}"
+    - "{{ nginx_swarm_vhost_directory }}"
+    - "{{ nginx_swarm_configuration_directory }}"
+    - "{{ nginx_swarm_ssl_directory }}"
+    - "{{ nginx_swarm_ssl_directory }}"
+    - "{{ nginx_swarm_root_directory }}"
+    - "{{ nginx_swarm_conf_directory }}"
+
 # Setup and config    
 - name: Set up nginx configuration
   template: 
