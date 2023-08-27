@@ -4,7 +4,8 @@
   apt:
     name: "{{ item }}"
     state: latest
-  loop: "{{ daemontools_installed_packages }}"
+  loop:
+    - "{{ daemontools_installed_packages }}"
 
 - name: Create daemontools working directory
   file:
