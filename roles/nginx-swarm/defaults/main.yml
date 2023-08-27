@@ -15,8 +15,8 @@ nginx_swarm_ssl_protocols: "TLSv1.2 TLSv1.3"
 nginx_swarm_ssl_ciphers: 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-CHACHA20-POLY1305'
   
 # logging
-nginx_swarm_access_logs: '/opt/log/nginx/access.log' 
-nginx_swarm_error_logs: '/opt/log/nginx/error.log'
+nginx_swarm_access_logs: "{{ nginx_swarm_log_directory }}/access.log"
+nginx_swarm_error_logs: "{{ nginx_swarm_log_directory }}/error.log"
 
 # custom settings
 nginx_swarm_extra_volumes: []
@@ -34,6 +34,6 @@ nginx_swarm_stack_dir: '/root/nginx'
 nginx_swarm_config_dir: '{{ nginx_swarm_stack_dir }}/nginx'
 nginx_swarm_docker_image: nginx
 nginx_swarm_docker_image_version: latest
-nginx_swarm_ssl_certs_dir:
-nginx_swarm_ssl_snake_oil_cert:
-nginx_swarm_ssl_snake_oil_key:
+nginx_swarm_ssl_certs_dir: '/etc/ssl/custom'
+  #nginx_swarm_ssl_snake_oil_cert: ''
+  #nginx_swarm_ssl_snake_oil_key: ''
