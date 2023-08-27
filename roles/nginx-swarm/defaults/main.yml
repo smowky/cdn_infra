@@ -20,7 +20,7 @@ nginx_swarm_error_logs: "{{ nginx_swarm_log_directory }}/error.log"
 
 # custom settings
 nginx_swarm_extra_volumes: []
-nginx_swarm_default_server_name: 'swarm-cdn.psylogical.org'
+nginx_swarm_default_server_name: 'swarmcdn.psylogical.org'
 
 # certificate
 certbot_image: certbot/certbot
