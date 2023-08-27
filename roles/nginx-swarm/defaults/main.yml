@@ -25,7 +25,7 @@ nginx_swarm_default_server_name: 'swarm-cdn.psylogical.org'
 # certificate
 certbot_image: certbot/certbot
 certbot_hostname: cb01
-certbot_conf_dir: /usr/share/certbot
+certbot_conf_dir: /etc/ssl/custom
 certbot_email: "{{ admin_mail }}"
 
 # swarm

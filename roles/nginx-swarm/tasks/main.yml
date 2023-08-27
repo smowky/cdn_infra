@@ -82,6 +82,11 @@
   tags: nginx-ssl
   notify: Reload nginx
 
+- name: Create custom certs directory 
+  file:
+    path: "{{ certbot_conf_dir }}"
+    state: directory
+
 - name: Check if cert files exist
   stat:
     path: "{{ certbot_conf_dir }}/live/{{ nginx_swarm_default_server_name }}"
