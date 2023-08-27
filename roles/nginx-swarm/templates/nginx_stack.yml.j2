@@ -13,10 +13,10 @@ services:
       - {{ nginx_swarm_conf_directory }}/conf.d/:/etc/nginx/conf.d/
       - {{ nginx_swarm_log_directory }}/:/var/log/nginx/
       - {{ nginx_swarm_root_directory }}/index.html:/var/www/index.html
-{% if nginx_swarm_ssl %}
-      - {{ nginx_swarm_ssl_certs_dir }}/:/etc/ssl/custom/
       - {{ nginx_swarm_ssl_snake_oil_cert }}:/etc/ssl/certs/ssl-cert-snakeoil.pem
       - {{ nginx_swarm_ssl_snake_oil_key }}:/etc/ssl/private/ssl-cert-snakeoil.key
+{% if nginx_swarm_ssl %}
+      - {{ nginx_swarm_ssl_certs_dir }}/:/etc/ssl/custom/
       - {{ nginx_swarm_ssl_directory }}/dhparams_4096.pem:/etc/ssl/dhparams_4096.pem
       - {{ nginx_swarm_webroot_directory }}:{{ nginx_swarm_webroot_directory }}
 {% endif %}
