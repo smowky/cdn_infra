@@ -2,10 +2,8 @@
 # Install
 - name: Install required packages
   apt:
-    name: "{{ item }}"
+    name: "{{ daemontools_installed_packages }}"
     state: latest
-  loop:
-    - "{{ daemontools_installed_packages }}"
 
 - name: Create daemontools working directory
   file:
