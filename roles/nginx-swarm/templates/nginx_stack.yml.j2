@@ -17,7 +17,6 @@ services:
       - {{ nginx_swarm_ssl_snake_oil_key }}:/etc/ssl/private/ssl-cert-snakeoil.key
       - {{ nginx_swarm_ssl_certs_dir }}/:/etc/ssl/custom/
       - {{ nginx_swarm_ssl_directory }}/dhparams_4096.pem:/etc/ssl/dhparams_4096.pem
-      - {{ nginx_swarm_webroot_directory }}:{{ nginx_swarm_webroot_directory }}
 {% for volume in nginx_swarm_extra_volumes %}
       - {{ volume }}
 {% endfor %}
