@@ -100,8 +100,9 @@
     volumes:
     - "{{ certbot_conf_dir }}/:/etc/letsencrypt/"
     - "{{ certbot_conf_dir }}/www/:/var/www/certbot/"
-    command: certonly --webroot --email {{ certbot_email }} --agree-tos --webroot-path=/var/www/certbot/ -d {{ nginx_swarm_default_server_name }}
+    command: certonly --webroot --email {{ certbot_email }} --agree-tos --webroot-path=/var/www/certbot/ -d {{ nginx_swarm_default_server_name }}  --http-01-address 0.0.0.0
   when: nginx_swarm_ssl
+  tags: nginx-certbot
 
 # Start swarm stack
 - name: Ensure there is nginx
