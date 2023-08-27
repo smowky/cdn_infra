@@ -49,6 +49,8 @@
     mode: 0644
   notify: Reload nginx
 
+# alway keep 443 default enabled, unless its port 443 closed
+  when: nginx_swarm_ssl
 - name: Create nginx default ssl site config
   template: 
     src: default_ssl.j2
@@ -56,7 +58,6 @@
     owner: root 
     group: root 
     mode: 0644
-  when: nginx_swarm_ssl
   notify: Reload nginx
 
 - name: Set up nginx default site HTML
@@ -86,7 +87,7 @@
   stat:
     path: "{{ certbot_conf_dir }}/live/{{ nginx_swarm_default_server_name }}"
   register: certbot_certs
-  when: nginx_swarm_disable_default_ssl
+  when: nginx_swarm_ssl
 
 - name: Issue certificate with certbot command
   docker_container:
