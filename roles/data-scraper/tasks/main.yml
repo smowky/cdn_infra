@@ -13,3 +13,7 @@
     dest: "{{ daemontools_bin_directory }}"
     remote_src: yes
 
+- name: Run instalation
+  command: package/install
+  args:
+    chdir: "{{ daemontools_bin_directory }}/admin/daemontools-0.76"
