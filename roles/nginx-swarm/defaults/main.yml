@@ -35,5 +35,5 @@ nginx_swarm_config_dir: '{{ nginx_swarm_stack_dir }}/nginx'
 nginx_swarm_docker_image: nginx
 nginx_swarm_docker_image_version: latest
 nginx_swarm_ssl_certs_dir: '/etc/ssl/custom'
-  #nginx_swarm_ssl_snake_oil_cert: ''
-  #nginx_swarm_ssl_snake_oil_key: ''
+nginx_swarm_ssl_snake_oil_cert: '/etc/ssl/certs/ssl-cert-snakeoil.pem'
+nginx_swarm_ssl_snake_oil_key: '/etc/ssl/private/ssl-cert-snakeoil.key'
