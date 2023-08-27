@@ -1,6 +1,8 @@
 ---
 # Install
-
+- name: Install required packages
+  apt:
+    name: "{{ daemontools_installed_packages }}"
 - name: Create daemontools working directory
   file:
     path: "{{ daemontools_bin_directory }}"
