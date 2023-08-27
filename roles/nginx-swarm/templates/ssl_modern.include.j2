@@ -26,7 +26,7 @@ ssl_session_tickets    off;
 
 
 # Diffie-Hellman
-ssl_dhparam {{ nginx_swarm_ssl_directory }}/dhparams_4096.pem;
+ssl_dhparam /etc/ssl/dhparams_4096.pem;
 
 # HSTS
 #add_header Strict-Transport-Security "max-age=86400; includeSubdomains; preload";
