@@ -10,14 +10,3 @@
     path: "{{ daemontools_bin_directory }}"
     state: directory
     mode: 1755
-
-- name: Download and unarchive
-  ansible.builtin.unarchive:
-    src: "{{ daemontools_bin_url }}"
-    dest: "{{ daemontools_bin_directory }}"
-    remote_src: yes
-
-- name: Run instalation
-  command: package/install
-  args:
-    chdir: "{{ daemontools_bin_directory }}/admin/daemontools-0.76"
