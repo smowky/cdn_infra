@@ -9,4 +9,4 @@
     - {role: prometheus, tags: prometheus}
     - {role: elasticsearch-swarm, tags: elasticsearch}
     - {role: nginx-swarm, tags: nginx-swarm}
-#    - {role: data_scraper, tags: data-scraper}
+    - {role: data-scraper, tags: data-scraper}
