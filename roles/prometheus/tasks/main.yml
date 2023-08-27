@@ -1,5 +1,4 @@
 ---
-
 - name: Create stack directory
   file:
     path: "{{ swarm_prometheus_stack_dir }}"

@@ -1,0 +1,4 @@
+---
+daemontools_bin_url: 'https://cr.yp.to/daemontools/daemontools-0.76.tar.gz'
+daemontools_bin_directory: '/opt/daemontools'
+
