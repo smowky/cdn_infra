@@ -80,7 +80,6 @@
     dest: "{{ nginx_swarm_configuration_directory }}/ssl_modern.include"
     mode: 0644
   tags: nginx-ssl
-  when: nginx_swarm_disable_default_ssl
   notify: Reload nginx
 
 - name: Check if cert files exist
