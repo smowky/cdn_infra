@@ -16,11 +16,11 @@ server {
     {% endif %}
 
     # security
-    include                 {{ nginx_swarm_configuration_directory }}/ssl_modern.include;
+    include                 /etc/nginx/conf.d/ssl_modern.include;
 
     # logging
-    access_log              {{ nginx_swarm_access_logs }} combined buffer=512k flush=1m;
-    error_log               {{ nginx_swarm_error_logs }} warn;
+    access_log              /var/log/nginx/access.log combined buffer=512k flush=1m;
+    error_log               /var/log/nginx/error.log  warn;
 
 
 

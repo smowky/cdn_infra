@@ -13,6 +13,8 @@ events {
 }
 
 http {
+    include                /etc/nginx/conf.d/*.conf;
+
     charset                utf-8;
     sendfile               on;
     tcp_nopush             on;
@@ -32,8 +34,8 @@ http {
     error_log              /var/log/nginx/error.log warn;
 
     # enable compression
-    gzip: "on"
-    gzip_disable: "msie6"
+    gzip "on";
+    gzip_disable "msie6";
 
     # OCSP Stapling
     ssl_stapling           on;
@@ -42,6 +44,5 @@ http {
     resolver_timeout       2s;
 
     # Load configs
-    include                /etc/nginx/conf.d/*.conf;
     include                /etc/nginx/sites-enabled/*;
 }
