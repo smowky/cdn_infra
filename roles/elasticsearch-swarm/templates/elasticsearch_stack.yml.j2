@@ -102,7 +102,6 @@ services:
       - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.verification_mode=certificate
-      - xpack.monitoring.enabled=true
       - xpack.license.self_generated.type=basic
     networks:
       - elasticsearch_default
@@ -163,7 +162,6 @@ services:
       - xpack.security.transport.ssl.certificate=certs/es02/es02.crt
       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.verification_mode=certificate
-      - xpack.monitoring.enabled=true
       - xpack.license.self_generated.type=basic
     networks:
       - elasticsearch_default
@@ -216,7 +214,6 @@ services:
       - xpack.security.transport.ssl.certificate=certs/es03/es03.crt
       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.verification_mode=certificate
-      - xpack.monitoring.enabled=true
       - xpack.license.self_generated.type=basic
     networks:
       - elasticsearch_default
