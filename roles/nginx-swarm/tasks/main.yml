@@ -50,7 +50,6 @@
   notify: Reload nginx
 
 # alway keep 443 default enabled, unless its port 443 closed
-  when: nginx_swarm_ssl
 - name: Create nginx default ssl site config
   template: 
     src: default_ssl.j2
