@@ -24,6 +24,8 @@ server {
     }
 
 
+
+
     location / {
         return 301 https://{{ nginx_default_server_name }}$request_uri;
     }
