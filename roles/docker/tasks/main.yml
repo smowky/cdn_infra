@@ -57,7 +57,7 @@
 # simple version one host swarm installation    
 - name: Prepare variables  
   set_fact:
-    exposed_address: "{{ hostvars[inventory_hostname]['ansible_' + ( swarm_internal_interface | regex_replace('-','_') ) ]['ipv4']['address'] | ipaddr('private') }}" 
+    exposed_address: "{{ hostvars[inventory_hostname]['ansible_' + ( swarm_internal_interface | regex_replace('-','_') ) ]['ipv4']['address'] | ansible.utils.ipaddr('private') }}" 
       # backup {{ ansible_facts['eth0']['ipv4_secondaries'][0]['address'] }}
 
 - name: Initialize swarm cluster
