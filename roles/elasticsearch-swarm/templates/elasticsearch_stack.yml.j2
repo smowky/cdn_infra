@@ -255,7 +255,7 @@ services:
       - {{ swarm_kibana_port }}:5601
     environment:
       - SERVERNAME=kibana
-      - SERVER_PUBLICBASEURL={{ kibana_server_name }}
+      - SERVER_PUBLICBASEURL=http://{{ kibana_server_name }}
       - ELASTICSEARCH_HOSTS=https://es01:9200
       - ELASTICSEARCH_USERNAME={{ swarm_kibana_user }}
       - "ELASTICSEARCH_PASSWORD={{ swarm_kibana_password }}" # TODO not happy with this
