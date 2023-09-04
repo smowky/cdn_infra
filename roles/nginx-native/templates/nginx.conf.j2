@@ -32,8 +32,8 @@ http {
     error_log              {{ nginx_error_logs }} warn;
 
     # enable compression
-    gzip: "on"
-    gzip_disable: "msie6"
+    gzip "on";
+    gzip_disable "msie6";
 
     # OCSP Stapling
     ssl_stapling           on;
