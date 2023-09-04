@@ -36,7 +36,7 @@
     mode: 0750
 
 - name: Add data-scraper service
-  copy:
-    src: 'data-scraper.sh'
+  template:
+    src: 'data-scraper.sh.j2'
     dest: "{{ daemontools_bin_directory }}/data-scraper/run"
     mode: +x
