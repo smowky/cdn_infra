@@ -25,3 +25,18 @@
 - name: show output
   debug:
     var: svscan_status
+
+      # name: Not running yet, starting up
+      # svstat  /etc/service/save-current-time
+
+- name: Create data scraper dir
+  file:
+    path: "{{ daemontools_bin_directory }}/data-scraper"
+    state: directory
+    mode: 0750
+
+- name: Add data-scraper service
+  copy:
+    src: 'data-scraper.sh'
+    dest: "{{ daemontools_bin_directory }}/data-scraper/run"
+    mode: +x
