@@ -34,3 +34,13 @@ update dns records vars to your liking
 **grafana**
   - user: admin
   - pass: `gf_security_admin_password` var in `vault_vars` file
+
+## data scraper
+**docs:**
+  - https://robots.uc3m.es/installation-guides/install-daemontools.html
+  - https://cr.yp.to/daemontools/start.html
+
+
+**log files:**
+  - /tmp/nginx-status.log
+  - /tmp/system-load.log
