@@ -18,7 +18,7 @@
     mode: a+x
 
 - name: Check if its svscan running
-  command: 'ps axuf | grep s[v]scanboot'
+  shell: 'ps axuf | grep s[v]scanboot'
   failed_when: false
   register: svscan_status
 
