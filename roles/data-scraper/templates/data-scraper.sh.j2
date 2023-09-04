@@ -6,11 +6,28 @@ system_load_log='/tmp/system-load.log'
 
 # update local files
 curl -XGET localhost:8880/nginx_status >> ${nginx_status_log}
-cat /proc/loadavg | awk -v date="$(date +%F_%T )" '{ print "{ \"load1\":"$1,",\n  \"load5\":" $2,",\n  \"load15:\":" $3,",\n  \"timestamp\": \"" date"\"\n}"  }' >> ${system_load_log}
+cat /proc/loadavg | awk -v date="$(date +%F_%T )" '{ print "{ \"load1\":"$1,",\n  \"load5\":" $2,",\n  \"load15\":" $3,",\n  \"timestamp\": \"" date"\"\n}"  }' >> ${system_load_log}
 
+##################################
 # put data to ES index
-load_avg_index_data=$(cat /proc/loadavg | awk -v date="$(date +%F_%T )" '{ print "{ \"load1\":"$1,",\n  \"load5\":" $2,",\n  \"load15:\":" $3,",\n  \"timestamp\": \"" date"\"\n}"  }')
 
-curl -s -X POST -k  -u "elastic:{{ swarm_elasticsearch_password }}" -H "Content-Type: application/json" https://localhost:9200/cdn-test-index/_doc  -d "${load_avg_index_data}"
+## ES status
+elasticsearch_status_data=$(curl -s -X GET -k  -u "elastic:{{ swarm_elasticsearch_password }}" -H "Content-Type: application/json" https://localhost:9200/_cluster/health)
+curl -s -X POST -k  -u "elastic:{{ swarm_elasticsearch_password }}" -H "Content-Type: application/json" https://localhost:9200/{{ daemontools_es_index }}/_doc  -d "${elasticsearch_status_data}"
 
+## nginx-swarm
+nginx_swarm_index_data=$(curl -XGET localhost:8880/nginx_status)
+curl -s -X POST -k  -u "elastic:{{ swarm_elasticsearch_password }}" -H "Content-Type: application/json" https://localhost:9200/{{ daemontools_es_index }}/_doc  -d "${nginx_swarm_index_data}"
+
+## nginx-native
+nginx_native_index_data=$(curl -XGET localhost:80/nginx_status)
+curl -s -X POST -k  -u "elastic:{{ swarm_elasticsearch_password }}" -H "Content-Type: application/json" https://localhost:9200/{{ daemontools_es_index }}/_doc  -d "${nginx_native_index_data}"
+
+## hypervisor load avg
+load_avg_index_data=$(cat /proc/loadavg | awk -v date="$(date +%F_%T )" '{ print "{ \"load1\":"$1,",\n  \"load5\":" $2,",\n  \"load15\":" $3,",\n  \"data-scraper:\":\"hypervisor-load-avg\",\n  \"timestamp\": \"" date"\"\n}"  }')
+
+curl -s -X POST -k  -u "elastic:{{ swarm_elasticsearch_password }}" -H "Content-Type: application/json" https://localhost:9200/{{ daemontools_es_index }}/_doc  -d "${load_avg_index_data}"
+
+
+##################################
 sleep 30

@@ -4,6 +4,26 @@ server {
     listen      [::]:80;
     server_name {{ nginx_default_server_name }};
 
+    location /nginx_status {
+        stub_status on;
+        access_log   off;
+        allow 127.0.0.0/8;
+        allow ::1/128;
+        deny all;
+
+        add_header Content-Type application/json;
+        return 200 '{\r
+              "timestamp": "$time_local",\r
+              "data-scraper": "nginx-native",\r
+              "connections_active": $connections_active,\r
+              "connections_reading": $connections_reading,\r
+              "connections_writing": $connections_writing,\r
+              "connections_waiting": $connections_waiting \r
+        }';
+
+    }
+
+
     location / {
         return 301 https://{{ nginx_default_server_name }}$request_uri;
     }

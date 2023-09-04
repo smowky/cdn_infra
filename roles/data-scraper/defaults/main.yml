@@ -6,4 +6,4 @@ daemontools_installed_packages:
   - 'daemontools'
   - 'daemontools-run'
 
-
+daemontools_es_index: 'cdn-test-index'
