@@ -4,7 +4,7 @@
     name: nginx
     state: reloaded
 
-- name: Restart nginx
+- name: Restart native nginx
   systemd:
     name: nginx
     state: restarted
