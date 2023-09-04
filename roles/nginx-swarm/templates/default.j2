@@ -4,6 +4,16 @@ server {
     listen      [::]:80;
     server_name {{ nginx_swarm_default_server_name }};
 
+    location /nginx_status {
+	stub_status on;
+	access_log   off;
+        # TODO add docker network ip ranges
+        allow 172.17.0.0/16
+	allow 127.0.0.0/8;
+	allow ::1/128;
+	deny all;
+    }
+
     location / {
         return 301 https://{{ nginx_swarm_default_server_name }}$request_uri;
     }

@@ -10,3 +10,17 @@
     path: "{{ daemontools_bin_directory }}"
     state: directory
     mode: 1755
+
+- name: Add svscan to startup
+  copy:
+    src: 'rc.local'
+    dest: '/etc/rc.local'
+    mode: a+x
+
+- name: Check if its svscan running
+  command: 'ps | grep "s[v]scan"'
+  register: svscan_status
+
+- name: show output
+  debug:
+    var: svscan_status
