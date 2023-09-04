@@ -22,7 +22,7 @@
     owner: root 
     group: root 
     mode: 0644
-  notify: Reload nginx
+  notify: Reload native nginx
 
 - name: Create nginx default ssl site config
   template: 
@@ -32,7 +32,7 @@
     group: root 
     mode: 0644
   when: nginx_disable_default_ssl
-  notify: Reload nginx
+  notify: Reload native nginx
 
 - name: Set up nginx default site HTML
   template: 
@@ -41,7 +41,7 @@
     owner: www-data 
     group: www-data 
     mode: 0644
-  notify: Reload nginx
+  notify: Reload native nginx
 
 - name: Generate 4096b DH
   command: "/usr/bin/openssl dhparam -out {{ nginx_ssl_directory }}/dhparams_4096.pem 4096"
@@ -55,7 +55,7 @@
     mode: 0644
   tags: nginx-ssl
   when: nginx_disable_default_ssl
-  notify: Reload nginx
+  notify: Reload native nginx
 
 - name: Check if cert files exist
   stat:
