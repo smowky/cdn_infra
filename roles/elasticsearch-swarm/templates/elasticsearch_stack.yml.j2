@@ -255,16 +255,16 @@ services:
       - {{ swarm_kibana_port }}:5601
     environment:
       - SERVERNAME=kibana
+      - SERVER_PUBLICBASEURL={{ kibana_server_name }}
       - ELASTICSEARCH_HOSTS=https://es01:9200
       - ELASTICSEARCH_USERNAME={{ swarm_kibana_user }}
       - "ELASTICSEARCH_PASSWORD={{ swarm_kibana_password }}" # TODO not happy with this
       - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
-      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY="min-32-byte-long-NEW-encryption-key"
-      - xpack.encryptedSavedObjects.encryptionKey="{{ swarm_kibana_encryptionkey }}" 
-      - xpack.reporting.encryptionKey="{{ swarm_kibana_encryptionkey_reporting }}" 
-      - xpack.security.encryptionKey="{{ swarm_kibana_encryptionkey_security }}" 
-      - xpack.security.session.idleTimeout=1h
-      - xpack.security.session.lifespan=30d
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY="{{ swarm_kibana_encryptionkey }}"
+      - XPACK_REPORTING_ENCRYPTIONKEY="{{ swarm_kibana_encryptionkey_reporting }}" 
+      - XPACK_SECURITY_ENCRYPTIONKEY="{{ swarm_kibana_encryptionkey_security }}" 
+      - XPACK_SECURITY_SESSION_IDLETIMEOUT=1h
+      - XPACK_SECURITY_SESSION_LIFESPAN=30d
     healthcheck:
       test:
         [
