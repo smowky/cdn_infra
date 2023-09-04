@@ -15,10 +15,11 @@ server {
 
         add_header Content-Type application/json;
         return 200 '{\r
+              "timestamp": "$time_local",\r
               "connections_active": $connections_active,\r
               "connections_reading": $connections_reading,\r
               "connections_writing": $connections_writing,\r
-              "connections_waiting": $connections_waiting
+              "connections_waiting": $connections_waiting \r
         }';
 
     }
