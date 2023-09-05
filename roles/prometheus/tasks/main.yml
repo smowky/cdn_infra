@@ -36,7 +36,7 @@
     src: 'grafana_vhost.conf.j2'
     dest: "{{ nginx_vhost_directory }}/grafana.conf"
   notify:
-    - Reload nginx
+    - Reload native nginx
 
 - name: Flush handlers # fix failure in first deploy, due missing grafana vhost on nginx unable to communicate with grafana
   meta: flush_handlers

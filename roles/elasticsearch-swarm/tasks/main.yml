@@ -68,4 +68,4 @@
     src: 'kibana_vhost.conf.j2'
     dest: "{{ nginx_vhost_directory }}/kibana.conf"
   notify:
-    - Reload nginx
+    - Reload native nginx

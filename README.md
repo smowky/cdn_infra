@@ -7,13 +7,14 @@
 
 `git clone https://github.com/smowky/cdn_infra.git`
 
-## run playbook 
-
-
-`ansible-playbook install.yml -i localhost --diff`
 
 ## passwords
 get vault pass amd save it's content to  `vault_pass`
+
+
+## run playbook
+`ansible-playbook install.yml -i localhost --diff`
+
 
 
 ## dns
