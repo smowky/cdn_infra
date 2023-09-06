@@ -58,13 +58,14 @@ server {
 	listen 443 ssl;
 	listen [::]:443 ssl;
 
-{% if kibana_logging %}
+        {% if kibana_logging %}
 	access_log /var/log/nginx/kibana.access.log;
         error_log /var/log/nginx/kibana.error.log;
-{% endif %}
+        {% endif %}
 
-	ssl_certificate {{ nginx_ssl_directory }}/kibana.pem;
-	ssl_certificate_key {{ nginx_ssl_directory }}/kibana.key;
+        ssl_certificate         {{ nginx_ssl_directory }}/live/{{ nginx_default_server_name }}/fullchain.pem;
+        ssl_certificate_key     {{ nginx_ssl_directory }}/live/{{ nginx_default_server_name }}/privkey.pem;
+        ssl_trusted_certificate {{ nginx_ssl_directory }}/live/{{ nginx_default_server_name }}/chain.pem;
 	include conf.d/ssl_modern.include;
 
 	root /var/www;
@@ -75,22 +76,22 @@ server {
         client_max_body_size 100M;
 
 	location / {
-	        satisfy any;
+	    satisfy any;
 
-{% if kibana_htaccess is true %}
-        {% for ip in kibana_allowed_ips %}
-	        allow {{ ip }};
-        {% endfor %}
-	        deny  all;
-	        auth_basic           "Administrator’s Area";
-	        auth_basic_user_file /etc/nginx/conf.d/kibana.htpasswd;
-{% endif %}
+            {% if kibana_htaccess is true %}
+            {% for ip in kibana_allowed_ips %}
+            allow {{ ip }};
+            {% endfor %}
+	    deny  all;
+	    auth_basic           "Administrator’s Area";
+	    auth_basic_user_file /etc/nginx/conf.d/kibana.htpasswd;
+            {% endif %}
 
-	        # proxy buffer increased for kibana short url function
-	        proxy_buffer_size          128k;
-	        proxy_buffers              4 256k;
-	        proxy_busy_buffers_size    256k;
-                proxy_pass http://kibana;
+	    # proxy buffer increased for kibana short url function
+	    proxy_buffer_size          128k;
+	    proxy_buffers              4 256k;
+	    proxy_busy_buffers_size    256k;
+            proxy_pass http://kibana;
         }
 
 }

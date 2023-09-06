@@ -56,7 +56,6 @@
   with_items:
     - 'ssl_modern.include.j2'
     - 'letsencrypt.include.j2'
-  when: nginx_disable_default_ssl
   notify: Reload native nginx
   tags: nginx-ssl
 

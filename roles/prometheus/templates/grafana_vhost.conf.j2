@@ -13,10 +13,10 @@ server {
 	listen 80;
 	listen [::]:80;
 
-    {% if grafana_logging %}
+        {% if grafana_logging %}
 	access_log /var/log/nginx/grafana.access.log;
         error_log /var/log/nginx/grafana.error.log;
-    {% endif %}
+        {% endif %}
 
 	root /var/www;
 
@@ -28,27 +28,27 @@ server {
 	location / {
 	    satisfy any;
 
-{% if grafana_htaccess is true %}
-        {% for ip in grafana_allowed_ips %}
-        allow {{ ip }};
-        {% endfor %}
+            {% if grafana_htaccess is true %}
+            {% for ip in grafana_allowed_ips %}
+            allow {{ ip }};
+            {% endfor %}
 	    deny  all;
 	    auth_basic           "Administrator’s Area";
-        auth_basic_user_file /etc/nginx/conf.d/grafana.htpasswd;
-{% endif %}
+            auth_basic_user_file /etc/nginx/conf.d/grafana.htpasswd;
+            {% endif %}
 
-        {% if grafana_ssl %}
-		return 301 https://$host$request_uri;
-		{% else %}
-		resolver 127.0.0.11 valid=30s;
-                proxy_set_header Upgrade $http_upgrade;
-                proxy_set_header Connection $connection_upgrade;
-                proxy_set_header Host $http_host;
-		proxy_set_header   X-Real-IP          $remote_addr;
-		proxy_set_header   X-Forwarded-Proto  $scheme;
-		proxy_set_header   X-Forwarded-For    $proxy_add_x_forwarded_for;
-		proxy_pass http://grafana;
-        {% endif %}
+            {% if grafana_ssl %}
+            return 301 https://$host$request_uri;
+            {% else %}
+            resolver 127.0.0.11 valid=30s;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection $connection_upgrade;
+            proxy_set_header Host $http_host;
+            proxy_set_header   X-Real-IP          $remote_addr;
+            proxy_set_header   X-Forwarded-Proto  $scheme;
+            proxy_set_header   X-Forwarded-For    $proxy_add_x_forwarded_for;
+            proxy_pass http://grafana;
+            {% endif %}
 	}
 }
 
@@ -58,13 +58,14 @@ server {
 	listen 443 ssl;
 	listen [::]:443 ssl;
 
-    {% if grafana_nginx_log %}
+        {% if grafana_nginx_log %}
 	access_log /var/log/nginx/grafana.access.log;
-    error_log /var/log/nginx/grafana.error.log;
-    {% endif %}
+        error_log /var/log/nginx/grafana.error.log;
+        {% endif %}
 
-	ssl_certificate {{ nginx_ssl_directory }}/grafana.pem;
-	ssl_certificate_key {{ nginx_ssl_directory }}/grafana.key;
+        ssl_certificate         {{ nginx_ssl_directory }}/live/{{ grafana_server_name }}/fullchain.pem;
+        ssl_certificate_key     {{ nginx_ssl_directory }}/live/{{ grafana_server_name }}/privkey.pem;
+        ssl_trusted_certificate {{ nginx_ssl_directory }}/live/{{ grafana_server_name }}/chain.pem;
 	include conf.d/ssl_modern.include;
 
 	root /var/www;
@@ -75,43 +76,38 @@ server {
         client_max_body_size 100M;
 
 	location / {
-        satisfy any;
-
-        {% if grafana_htaccess is true %}
-        {% for ip in grafana_allowed_ips %}
-        allow {{ ip }};
-        {% endfor %}
-        deny  all;
-
-	    auth_basic           "Administrator’s Area";
-        auth_basic_user_file /etc/nginx/conf.d/grafana.htpasswd;
-{% endif %}
-##################
-# web socket updates
+            satisfy any;
+  
+            {% if grafana_htaccess is true %}
+            {% for ip in grafana_allowed_ips %}
+            allow {{ ip }};
+            {% endfor %}
+            deny  all;
+  
+            auth_basic           "Administrator’s Area";
+            auth_basic_user_file /etc/nginx/conf.d/grafana.htpasswd;
+            {% endif %}
+  
+            ##################
+            # web socket updates
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection $connection_upgrade;
             proxy_set_header Host $http_host;
-###################
-# ip address test
-		proxy_set_header   X-Real-IP          $remote_addr;
-		proxy_set_header   X-Forwarded-Proto  $scheme;
-		proxy_set_header   X-Forwarded-For    $proxy_add_x_forwarded_for;
-##################
-		proxy_pass http://grafana;
+            proxy_set_header   X-Real-IP          $remote_addr;
+            proxy_set_header   X-Forwarded-Proto  $scheme;
+            proxy_set_header   X-Forwarded-For    $proxy_add_x_forwarded_for;
+  	    proxy_pass http://grafana;
 	}
 
-       location /grafana/api/live {
+        location /grafana/api/live {
             resolver 127.0.0.11 valid=30s;
             rewrite  ^/grafana/(.*)  /$1 break;
             proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection $connection_upgrade;
             proxy_set_header Host $http_host;
-            set $upstream http://127.0.0.1:3000;
-            proxy_pass $upstream;
-
-          }
-
+  	    proxy_pass http://grafana;
+        }
 
 }
 {% endif %}

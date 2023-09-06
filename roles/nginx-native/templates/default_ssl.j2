@@ -6,10 +6,10 @@ server {
     root                    $base/public;
 
     # SSL
-    {% if nginx_disable_default_ssl == false %}
-    ssl_certificate         /etc/letsencrypt/live/{{ nginx_default_server_name }}/fullchain.pem;
-    ssl_certificate_key     /etc/letsencrypt/live/{{ nginx_default_server_name }}/privkey.pem;
-    ssl_trusted_certificate /etc/letsencrypt/live/{{ nginx_default_server_name }}/chain.pem;
+    {% if nginx_default_ssl  %}
+    ssl_certificate         {{ nginx_ssl_directory }}/live/{{ nginx_default_server_name }}/fullchain.pem;
+    ssl_certificate_key     {{ nginx_ssl_directory }}/live/{{ nginx_default_server_name }}/privkey.pem;
+    ssl_trusted_certificate {{ nginx_ssl_directory }}/live/{{ nginx_default_server_name }}/chain.pem;
     {% else %}
     ssl_certificate /etc/ssl/certs/ssl-cert-snakeoil.pem;
     ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
@@ -33,10 +33,10 @@ server {
     server_name             *.{{ nginx_default_server_name }};
 
     # SSL
-    {% if nginx_disable_default_ssl == false %}
-    ssl_certificate         /etc/letsencrypt/live/{{ nginx_default_server_name }}/fullchain.pem;
-    ssl_certificate_key     /etc/letsencrypt/live/{{ nginx_default_server_name }}/privkey.pem;
-    ssl_trusted_certificate /etc/letsencrypt/live/{{ nginx_default_server_name }}/chain.pem;
+    {% if nginx_default_ssl  %}
+    ssl_certificate         {{ nginx_ssl_directory }}/live/{{ nginx_default_server_name }}/fullchain.pem;
+    ssl_certificate_key     {{ nginx_ssl_directory }}/live/{{ nginx_default_server_name }}/privkey.pem;
+    ssl_trusted_certificate {{ nginx_ssl_directory }}/live/{{ nginx_default_server_name }}/chain.pem;
     {% else %}
     ssl_certificate /etc/ssl/certs/ssl-cert-snakeoil.pem;
     ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
