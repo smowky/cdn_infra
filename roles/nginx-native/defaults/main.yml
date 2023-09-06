@@ -7,7 +7,6 @@ nginx_native_installed_packages:
 
 nginx_conf_directory: '/etc/nginx'
 nginx_root_directory: '/var/www/html'
-nginx_ssl_directory: '/etc/ssl'
 nginx_configuration_directory: "{{ nginx_conf_directory }}/conf.d"
 
 nginx_worker_connections: 4096
@@ -21,11 +20,5 @@ nginx_access_logs: '/var/log/nginx/access.log'
 nginx_error_logs: '/var/log/nginx/error.log'
 
 # custom settings
-nginx_disable_default_ssl: true
+nginx_default_ssl: false
 nginx_default_server_name: 'cdn.psylogical.org'
-
-# certificate
-certbot_image: certbot/certbot
-certbot_hostname: cb01
-certbot_conf_dir: /usr/share/certbot
-certbot_email: info@example.com

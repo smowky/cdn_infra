@@ -1,27 +1,16 @@
 ---
-# Ansible vars file
-ansible_python_interpreter: /usr/bin/python3
-
 # defaults 
-ansible_ssh_private_key_file: ~/.ssh/psylogical_ansible/psylogical_ansible_ecdsa
-  
-# bootsrap playbook
-user:
-  ansible:
-    # problem s tim, ze home je pro become: yes nastaveny jako /root
-    home:         "/var/lib/ansible"
-    ssh_pub_key:  "{{ lookup('file', '.ssh/psylogical_ansible_ecdsa.pub') }}"
-
-  smowky:
-    # created with:
-    #  python -c "from passlib.hash import sha512_crypt; print sha512_crypt.encrypt('<password>')"
-    # above command requires the PassLib library: sudo pip install passlib
-    home:         "/home/smowky"
-    pass: "{{ smowky_hashed_pass }}"
-    ssh_pub_key:  "{{ lookup('file', '/home/smowky/.ssh/id_ed25519.pub') }}"
+ansible_python_interpreter: /usr/bin/python3
 
 admin_mail: "smowky@psylogical.org"
 
 # nginx
 nginx_conf_directory: '/etc/nginx'
 nginx_vhost_directory: "{{ nginx_conf_directory }}/sites-enabled"
+nginx_ssl_directory: '/etc/ssl'
+  
+# certbot
+certbot_image: certbot/certbot
+certbot_hostname: cb01
+certbot_conf_dir: '/tmp'
+certbot_email: "{{ admin_mail }}"
