@@ -48,14 +48,17 @@
   args:
     creates: "{{ nginx_ssl_directory }}/dhparams_4096.pem"
 
-- name: Add security input 
+- name: Add input
   template:
-    src: ssl_modern.include.j2
+    src: "{{ item }}"
     dest: "{{ nginx_configuration_directory }}/ssl_modern.include"
     mode: 0644
-  tags: nginx-ssl
+  with_items:
+    - 'ssl_modern.include.j2'
+    - 'letsencrypt.include.j2'
   when: nginx_disable_default_ssl
   notify: Reload native nginx
+  tags: nginx-ssl
 
 - name: Check if cert files exist
   stat:

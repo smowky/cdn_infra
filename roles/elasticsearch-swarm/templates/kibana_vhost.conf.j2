@@ -13,10 +13,10 @@ server {
 	listen 80;
 	listen [::]:80;
 
-    {% if kibana_logging %}
+        {% if kibana_logging %}
 	access_log /var/log/nginx/kibana.access.log;
         error_log /var/log/nginx/kibana.error.log;
-    {% endif %}
+        {% endif %}
 
 	root /var/www;
 
@@ -24,6 +24,9 @@ server {
 
 	server_name {{ kibana_server_name }};
         client_max_body_size 100M;
+        {% if kibana_ssl %}
+	include conf.d/letsencrypt.include;
+        {% endif %}
 
 	location / {
 	    satisfy any;
