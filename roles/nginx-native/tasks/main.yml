@@ -54,8 +54,8 @@
     dest: "{{ nginx_configuration_directory }}/{{ item }}"
     mode: 0644
   with_items:
-    - 'ssl_modern.include.j2'
-    - 'letsencrypt.include.j2'
+    - 'ssl_modern.include'
+    - 'letsencrypt.include'
   notify: Reload native nginx
   tags: nginx-ssl
 
