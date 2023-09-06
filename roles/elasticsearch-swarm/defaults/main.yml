@@ -25,7 +25,7 @@ swarm_kibana_port: 5601
 # nginx
 kibana_server_name: 'kibana-cdn.psylogical.org'
 kibana_logging: true
-kibana_ssl: false
+kibana_ssl: true
 
 # fw
 #ufw_rules_elasticsearch:
