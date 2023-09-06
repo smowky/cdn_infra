@@ -27,6 +27,9 @@ kibana_server_name: 'kibana-cdn.psylogical.org'
 kibana_logging: true
 kibana_ssl: true
 
+# certbot
+certbot_conf_dir: /tmp
+  
 # fw
 #ufw_rules_elasticsearch:
 #  - { 'rule': 'allow', 'to_port': '2376', 'protocol': 'tcp', 'from_ip': 'any' }
