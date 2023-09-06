@@ -22,10 +22,10 @@ server {
 
 	index index.html;
 
-	server_name {{ kibana_server_name }};
+        server_name {{ kibana_server_name }};
         client_max_body_size 100M;
         {% if kibana_ssl %}
-	include conf.d/letsencrypt.include;
+        include conf.d/letsencrypt.include;
         {% endif %}
 
 	location / {

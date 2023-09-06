@@ -70,7 +70,7 @@
     volumes:
     - "{{ certbot_conf_dir }}:/etc/letsencrypt/"
     - "{{ certbot_conf_dir }}/www/:/var/www/certbot/"
-    command: "certonly --webroot --email {{ certbot_email }} --agree-tos --webroot-path=/var/www/certbot/ -d {{ kibana_server_name }} --dry-run"
+    command: "certonly --webroot --email {{ certbot_email }} --agree-tos --webroot-path=/var/www/certbot/ -d {{ kibana_server_name }}"
   when: kibana_ssl
 
 - name: Enable nginx kibana vhost on hypervisor
