@@ -50,8 +50,8 @@
 
 - name: Add input
   template:
-    src: "{{ item }}"
-    dest: "{{ nginx_configuration_directory }}/ssl_modern.include"
+    src: "{{ item }}.j2"
+    dest: "{{ nginx_configuration_directory }}/{{ item }}"
     mode: 0644
   with_items:
     - 'ssl_modern.include.j2'
