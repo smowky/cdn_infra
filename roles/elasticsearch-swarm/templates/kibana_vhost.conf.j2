@@ -1,4 +1,8 @@
-# Grafana nginx server configuration
+# kibana nginx server configuration
+upstream kibana {
+  keepalive 16;
+  server 127.0.0.1:5601;
+}
 
 map $http_upgrade $connection_upgrade {
   default upgrade;
@@ -30,16 +34,18 @@ server {
         {% endfor %}
 	    deny  all;
 	    auth_basic           "Administrator’s Area";
-        auth_basic_user_file /etc/nginx/conf.d/kibana.htpasswd;
+            auth_basic_user_file /etc/nginx/conf.d/kibana.htpasswd;
 {% endif %}
 
-        {% if kibana_ssl %}
-		return 301 https://$host$request_uri;
-		{% else %}
-		resolver 127.0.0.11 valid=30s;
-		set $upstream http://127.0.0.1:5601;
-		proxy_pass $upstream;
-        {% endif %}
+{% if kibana_ssl %}
+	    return 301 https://$host$request_uri;
+	    {% else %}
+            # proxy buffer increased for kibana short url function
+            proxy_buffer_size          128k;
+            proxy_buffers              4 256k;
+            proxy_busy_buffers_size    256k;
+	    proxy_pass $upstream;
+{% endif %}
 	}
 }
 
@@ -49,10 +55,10 @@ server {
 	listen 443 ssl;
 	listen [::]:443 ssl;
 
-    {% if kibana_nginx_log %}
+{% if kibana_nginx_log %}
 	access_log /var/log/nginx/kibana.access.log;
-    error_log /var/log/nginx/kibana.error.log;
-    {% endif %}
+        error_log /var/log/nginx/kibana.error.log;
+{% endif %}
 
 	ssl_certificate {{ nginx_ssl_directory }}/kibana.pem;
 	ssl_certificate_key {{ nginx_ssl_directory }}/kibana.key;
@@ -66,29 +72,23 @@ server {
         client_max_body_size 100M;
 
 	location / {
-        satisfy any;
+	        satisfy any;
 
-        {% if kibana_htaccess is true %}
+{% if kibana_htaccess is true %}
         {% for ip in kibana_allowed_ips %}
-        allow {{ ip }};
+	        allow {{ ip }};
         {% endfor %}
-        deny  all;
-
-	    auth_basic           "Administrator’s Area";
-        auth_basic_user_file /etc/nginx/conf.d/kibana.htpasswd;
+	        deny  all;
+	        auth_basic           "Administrator’s Area";
+	        auth_basic_user_file /etc/nginx/conf.d/kibana.htpasswd;
 {% endif %}
-        resolver 127.0.0.11 valid=30s;
-		set $upstream http://127.0.0.1:5601;
-                proxy_pass $upstream;
 
-                # proxy buffer increased for kibana short url function
-                proxy_buffer_size          128k;
-                proxy_buffers              4 256k;
-                proxy_busy_buffers_size    256k;
+	        # proxy buffer increased for kibana short url function
+	        proxy_buffer_size          128k;
+	        proxy_buffers              4 256k;
+	        proxy_busy_buffers_size    256k;
+	        proxy_pass $upstream;
         }
-
-	}
-
 
 }
 {% endif %}

@@ -45,3 +45,12 @@ update dns records vars to your liking
 **log files:**
   - /tmp/nginx-status.log
   - /tmp/system-load.log
+
+## docker-swarm
+### troubleshooting
+  `msg: Unrecognized type <<class 'ansible.template.AnsibleUndefined'>> for ipaddr filter <value>`
+
+ - check value of `swarm_internal_interface`
+
+---
+
