@@ -63,9 +63,9 @@ server {
         error_log /var/log/nginx/kibana.error.log;
         {% endif %}
 
-        ssl_certificate         {{ nginx_ssl_directory }}/live/{{ nginx_default_server_name }}/fullchain.pem;
-        ssl_certificate_key     {{ nginx_ssl_directory }}/live/{{ nginx_default_server_name }}/privkey.pem;
-        ssl_trusted_certificate {{ nginx_ssl_directory }}/live/{{ nginx_default_server_name }}/chain.pem;
+        ssl_certificate         {{ nginx_ssl_directory }}/live/{{ kibana_server_name }}/fullchain.pem;
+        ssl_certificate_key     {{ nginx_ssl_directory }}/live/{{ kibana_server_name }}/privkey.pem;
+        ssl_trusted_certificate {{ nginx_ssl_directory }}/live/{{ kibana_server_name }}/chain.pem;
 	include conf.d/ssl_modern.include;
 
 	root /var/www;
