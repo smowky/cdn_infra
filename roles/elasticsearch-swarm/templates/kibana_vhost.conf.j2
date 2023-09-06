@@ -55,7 +55,7 @@ server {
 	listen 443 ssl;
 	listen [::]:443 ssl;
 
-{% if kibana_nginx_log %}
+{% if kibana_logging %}
 	access_log /var/log/nginx/kibana.access.log;
         error_log /var/log/nginx/kibana.error.log;
 {% endif %}
