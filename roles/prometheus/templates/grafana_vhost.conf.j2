@@ -58,7 +58,7 @@ server {
 	listen 443 ssl;
 	listen [::]:443 ssl;
 
-        {% if grafana_nginx_log %}
+        {% if grafana_logging %}
 	access_log /var/log/nginx/grafana.access.log;
         error_log /var/log/nginx/grafana.error.log;
         {% endif %}
