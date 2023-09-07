@@ -1,9 +1,7 @@
 # cdn_infra
 
 ## prerequisities
-`apt update`
-
-`apt install ansible git -y`
+`apt update && apt install ansible git -y`
 
 `git clone https://github.com/smowky/cdn_infra.git`
 
