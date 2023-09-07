@@ -16,7 +16,7 @@ server {
     {% endif %}
 
     # security
-    include                 {{ nginx_configuration_directory }}/ssl_modern.include;
+    include                 conf.d/ssl_modern.include;
 
     # logging
     access_log              {{ nginx_access_logs }} combined buffer=512k flush=1m;

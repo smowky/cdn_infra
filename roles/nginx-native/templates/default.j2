@@ -4,10 +4,8 @@ server {
     listen      [::]:80;
     server_name {{ nginx_default_server_name }};
 
-    location ~ /.well-known/acme-challenge {
-        allow all;
-        root /tmp/www;
-    }
+    include                 conf.d/letsencrypt.include;
+
     location /nginx_status {
         stub_status on;
         access_log   off;
