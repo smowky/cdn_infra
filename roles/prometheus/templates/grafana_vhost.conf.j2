@@ -24,6 +24,7 @@ server {
 
 	server_name {{ grafana_server_name }};
         client_max_body_size 100M;
+	include conf.d/letsencrypt.include;
 
 	location / {
 	    satisfy any;
