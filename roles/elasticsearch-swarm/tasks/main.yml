@@ -63,11 +63,18 @@
       - "{{ swarm_elasticsearch_stack_dir }}/elasticsearch_stack.yml"
   tags: stack-reload
 
+- name: Check if certificate already exist
+  stat:
+    path: "{{ nginx_ssl_directory }}/live/{{ kibana_server_name }}"
+  register: kibana_certificate
+
 - name: Issue a certificate
   block:
     - name: Issue a certificate
       include_tasks: create-certificate.yml
-  when: kibana_ssl
+  when:
+    - kibana_ssl
+    - kibana_certificate.stat.exist == false
 
 - name: Enable nginx kibana vhost on hypervisor
   template:

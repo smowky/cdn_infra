@@ -1,0 +1,15 @@
+---
+- name: Issue certificate with certbot command
+  docker_container:
+    name: "{{ certbot_hostname }}"
+    image: "{{ certbot_image }}"
+    auto_remove: yes # TODO switch to yes after debuging phase
+    volumes:
+      - "{{ nginx_ssl_directory }}:/etc/letsencrypt/"
+      - "{{ certbot_conf_dir }}/www/:/var/www/certbot/"
+    command: "certonly --webroot --email {{ certbot_email }} --agree-tos --webroot-path=/var/www/certbot/ -d {{ kibana_server_name }}"
+
+- name: Wait until the certificate is present before continuing or timeout after minute
+  ansible.builtin.wait_for:
+    timeout: 60
+    path: "{{ nginx_ssl_directory }}/live/{{ kibana_server_name }}"

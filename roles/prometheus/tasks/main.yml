@@ -31,23 +31,25 @@
       - "{{ swarm_prometheus_stack_dir }}/prometheus_stack.yml"
   tags: stack-reload
 
-- name: Issue certificate with certbot command
-  docker_container:
-    name: "{{ certbot_hostname }}"
-    image: "{{ certbot_image }}"
-    auto_remove: no # TODO switch to yes after debuging phase
-    volumes:
-      - "{{ nginx_ssl_directory }}:/etc/letsencrypt/"
-      - "{{ certbot_conf_dir }}/www/:/var/www/certbot/"
-    command: "certonly --webroot --email {{ certbot_email }} --agree-tos --webroot-path=/var/www/certbot/ -d {{ grafana_server_name }}"
-  when: kibana_ssl
-
 - name: Enable nginx grafana vhost on hypervisor
   template:
     src: 'grafana_vhost.conf.j2'
     dest: "{{ nginx_vhost_directory }}/grafana.conf"
   notify:
     - Reload native nginx
+
+- name: Check if certificate already exist
+  stat:
+    path: "{{ nginx_ssl_directory }}/live/{{ grafana_server_name }}"
+  register: grafana_certificate
+
+- name: Issue a certificate
+  block:
+    - name: Issue a certificate
+      include_tasks: create-certificate.yml
+  when:
+    - grafana_ssl
+    - grafana_certificate.stat.exist == false
 
 - name: Flush handlers # fix failure in first deploy, due missing grafana vhost on nginx unable to communicate with grafana
   meta: flush_handlers

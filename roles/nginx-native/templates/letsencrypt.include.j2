@@ -1,4 +1,4 @@
 location ~ /.well-known/acme-challenge {
         allow all;
-        root {{ certbot_conf_dir }};
+        root {{ certbot_conf_dir }}/www;
     }
