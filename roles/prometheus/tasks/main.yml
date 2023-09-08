@@ -40,7 +40,7 @@
 
 - name: Check if certificate already exist
   stat:
-    path: "{{ nginx_ssl_directory }}/live/{{ grafana_server_name }}"
+    path: "{{ nginx_ssl_directory }}/live/{{ grafana_server_name }}/cert.pem"
   register: grafana_certificate
 
 - name: Issue a certificate
@@ -49,7 +49,7 @@
       include_tasks: create-certificate.yml
   when:
     - grafana_ssl
-    - grafana_certificate.stat.exist == false
+    - grafana_certificate.stat.exists == false
 
 - name: Flush handlers # fix failure in first deploy, due missing grafana vhost on nginx unable to communicate with grafana
   meta: flush_handlers
