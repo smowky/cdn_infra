@@ -23,7 +23,8 @@ update dns records vars to your liking
 - `nginx_swarm_default_server_name`
 
 ## ssl
-
+- make sure dns records are set
+- update VHOST_NAME_ssl var to true
 
 ## logins
 **kibana:**
